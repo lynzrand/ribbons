@@ -6,7 +6,9 @@ import RibbonTreemap from "./RibbonTreemap.vue";
 
 defineProps<{ ribbon: Ribbon; identityName: string }>();
 const previewMode = ref("avatar");
-const layout = defineModel<"strip" | "treemap">("layout", { required: true });
+const layout = defineModel<"strip" | "treemap" | "circle">("layout", {
+  required: true,
+});
 const aspectRatio = defineModel<number>("aspectRatio", { required: true });
 function setRatio(event: Event) {
   const value = (event.target as HTMLInputElement).valueAsNumber;
@@ -27,6 +29,12 @@ function setRatio(event: Event) {
             @click="layout = 'treemap'"
           >
             Treemap
+          </button>
+          <button
+            :aria-pressed="layout === 'circle'"
+            @click="layout = 'circle'"
+          >
+            Circle
           </button>
         </div>
         <div v-if="layout === 'treemap'" class="ratio-controls">
@@ -55,7 +63,8 @@ function setRatio(event: Event) {
         </div>
       </div>
       <RibbonTreemap
-        v-if="layout === 'treemap'"
+        v-if="layout !== 'strip'"
+        :circular="layout === 'circle'"
         :ribbon="ribbon"
         :aspect-ratio="aspectRatio"
       />
@@ -89,13 +98,13 @@ function setRatio(event: Event) {
         <div v-if="previewMode === 'avatar'" class="avatar-preview">
           <RibbonTreemap :ribbon="ribbon" :aspect-ratio="1" :size="96" />
           <RibbonTreemap
-            class="round-avatar"
+            circular
             :ribbon="ribbon"
             :aspect-ratio="1"
             :size="64"
           />
           <RibbonTreemap
-            class="round-avatar"
+            circular
             :ribbon="ribbon"
             :aspect-ratio="1"
             :size="32"
@@ -137,9 +146,6 @@ function setRatio(event: Event) {
   display: flex;
   align-items: center;
   gap: 24px;
-}
-.avatar-preview .round-avatar {
-  border-radius: 50%;
 }
 
 .layout-controls,

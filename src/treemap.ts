@@ -1,3 +1,5 @@
+import { circleArea, circleBounds } from "./circle-area.ts";
+
 export interface Tile {
   x: number;
   y: number;
@@ -5,13 +7,15 @@ export interface Tile {
   height: number;
 }
 
-/** Carve one color from the remaining rectangle, preserving input order and area.
+/** Recursively split contiguous color groups near half their combined weight.
+ * In circle mode, areas refer to the visible disk, not its bounding square.
  * Split the longer dimension; within 5% of square, alternate using depth parity.
  */
 export function sliceAndDice(
   weights: number[],
   width: number,
   height: number,
+  shape: "rectangle" | "circle" = "rectangle",
 ): Tile[] {
   if (
     !Number.isFinite(width) ||
@@ -25,34 +29,74 @@ export function sliceAndDice(
       "Treemap dimensions and weights must be finite and positive.",
     );
   }
-  let remainingWeight = weights.reduce((sum, weight) => sum + weight, 0);
-  let remainder: Tile = { x: 0, y: 0, width, height };
-  return weights.map((weight, depth) => {
-    if (depth === weights.length - 1) return remainder;
-    const fraction = weight / remainingWeight;
+  // Circular layout uses a normalized unit disk; scale only the final rectangles.
+  const circular = shape === "circle";
+  if (circular && width !== height)
+    throw new Error("A circular treemap needs square dimensions.");
+  function partition(group: number[], region: Tile, depth: number): Tile[] {
+    if (circular) region = circleBounds(region);
+    if (group.length === 1) return [region];
+    const total = group.reduce((sum, weight) => sum + weight, 0);
+    let prefix = 0;
+    let leftWeight = 0;
+    let split = 1;
+    let bestDifference = Infinity;
+    // Preserve color order while choosing the most balanced nonempty groups.
+    for (let index = 1; index < group.length; index++) {
+      prefix += group[index - 1]!;
+      const difference = Math.abs(prefix - total / 2);
+      if (difference < bestDifference) {
+        bestDifference = difference;
+        leftWeight = prefix;
+        split = index;
+      }
+    }
+    const fraction = leftWeight / total;
     const nearSquare =
-      Math.abs(remainder.width - remainder.height) <=
-      0.05 * Math.max(remainder.width, remainder.height);
+      Math.abs(region.width - region.height) <=
+      0.05 * Math.max(region.width, region.height);
     const splitWidth = nearSquare
       ? depth % 2 === 0
-      : remainder.width > remainder.height;
-    const tile = { ...remainder };
-    if (splitWidth) {
-      tile.width *= fraction;
-      remainder = {
-        ...remainder,
-        x: remainder.x + tile.width,
-        width: remainder.width - tile.width,
-      };
-    } else {
-      tile.height *= fraction;
-      remainder = {
-        ...remainder,
-        y: remainder.y + tile.height,
-        height: remainder.height - tile.height,
-      };
+      : region.width > region.height;
+    const dimension = splitWidth ? "width" : "height";
+    let cut = region[dimension] * fraction;
+    if (circular) {
+      const target = circleArea(region) * fraction;
+      let low = 0;
+      let high = region[dimension];
+      // Visible disk area is monotone in the cut position.
+      for (let iteration = 0; iteration < 48; iteration++) {
+        cut = (low + high) / 2;
+        const area = circleArea({ ...region, [dimension]: cut });
+        if (area < target) low = cut;
+        else high = cut;
+      }
     }
-    remainingWeight -= weight;
-    return tile;
-  });
+    const first = { ...region, [dimension]: cut };
+    const second = splitWidth
+      ? { ...region, x: region.x + cut, width: region.width - cut }
+      : { ...region, y: region.y + cut, height: region.height - cut };
+    return [
+      ...partition(group.slice(0, split), first, depth + 1),
+      ...partition(group.slice(split), second, depth + 1),
+    ];
+  }
+  const tiles = partition(
+    weights,
+    {
+      x: 0,
+      y: 0,
+      width: circular ? 1 : width,
+      height: circular ? 1 : height,
+    },
+    0,
+  );
+  return circular
+    ? tiles.map((tile) => ({
+        x: tile.x * width,
+        y: tile.y * height,
+        width: tile.width * width,
+        height: tile.height * height,
+      }))
+    : tiles;
 }

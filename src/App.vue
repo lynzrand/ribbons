@@ -28,7 +28,7 @@ const activeTab = ref<"explore" | "saved">("explore");
 const error = ref("");
 const notice = ref("");
 const selected = ref(0);
-const layout = ref<"strip" | "treemap">("treemap");
+const layout = ref<"strip" | "treemap" | "circle">("treemap");
 const aspectRatio = ref(1);
 const rerollOnChange = ref(false);
 const variations = ref<Ribbon[]>([]);
@@ -170,10 +170,20 @@ function download(format: "svg" | "json") {
     content = JSON.stringify({ name: identityName.value, ...ribbon }, null, 2);
   else {
     const width = 1000;
-    const height = layout.value === "treemap" ? width / aspectRatio.value : 40;
+    const height =
+      layout.value === "circle"
+        ? width
+        : layout.value === "treemap"
+          ? width / aspectRatio.value
+          : 40;
     const tiles =
-      layout.value === "treemap"
-        ? sliceAndDice(ribbon.widths, width, height)
+      layout.value !== "strip"
+        ? sliceAndDice(
+            ribbon.widths,
+            width,
+            height,
+            layout.value === "circle" ? "circle" : "rectangle",
+          )
         : ribbon.widths.map((weight, index) => ({
             x:
               ribbon.widths
@@ -187,7 +197,11 @@ function download(format: "svg" | "json") {
       (tile, index) =>
         `<rect x="${tile.x}" y="${tile.y}" width="${tile.width}" height="${tile.height}" fill="${ribbon.colors[index]}"/>`,
     );
-    content = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${rectangles.join("")}</svg>`;
+    const clip =
+      layout.value === "circle"
+        ? `<defs><clipPath id="disk"><circle cx="${width / 2}" cy="${height / 2}" r="${width / 2}"/></clipPath></defs>`
+        : "";
+    content = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${clip}<g${clip ? ' clip-path="url(#disk)"' : ""}>${rectangles.join("")}</g></svg>`;
   }
   const url = URL.createObjectURL(
     new Blob([content], {
@@ -274,7 +288,8 @@ generate();
                 }}</span>
               </div>
               <RibbonTreemap
-                v-if="layout === 'treemap'"
+                v-if="layout !== 'strip'"
+                :circular="layout === 'circle'"
                 :ribbon="ribbon"
                 :aspect-ratio="aspectRatio"
                 :size="64"
