@@ -6,7 +6,7 @@ import RibbonTreemap from "./RibbonTreemap.vue";
 
 defineProps<{ ribbon: Ribbon; identityName: string }>();
 const previewMode = ref("avatar");
-const layout = defineModel<"strip" | "treemap" | "circle">("layout", {
+const layout = defineModel<"strip" | "treemap" | "circle" | "power">("layout", {
   required: true,
 });
 const aspectRatio = defineModel<number>("aspectRatio", { required: true });
@@ -35,6 +35,9 @@ function setRatio(event: Event) {
             @click="layout = 'circle'"
           >
             Circle
+          </button>
+          <button :aria-pressed="layout === 'power'" @click="layout = 'power'">
+            Power
           </button>
         </div>
         <div v-if="layout === 'treemap'" class="ratio-controls">
@@ -65,6 +68,7 @@ function setRatio(event: Event) {
       <RibbonTreemap
         v-if="layout !== 'strip'"
         :circular="layout === 'circle'"
+        :voronoi="layout === 'power'"
         :ribbon="ribbon"
         :aspect-ratio="aspectRatio"
       />
@@ -99,12 +103,14 @@ function setRatio(event: Event) {
           <RibbonTreemap :ribbon="ribbon" :aspect-ratio="1" :size="96" />
           <RibbonTreemap
             circular
+            :voronoi="layout === 'power'"
             :ribbon="ribbon"
             :aspect-ratio="1"
             :size="64"
           />
           <RibbonTreemap
             circular
+            :voronoi="layout === 'power'"
             :ribbon="ribbon"
             :aspect-ratio="1"
             :size="32"
@@ -154,6 +160,9 @@ function setRatio(event: Event) {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+.layout-switch {
+  flex-wrap: wrap;
 }
 .layout-controls {
   justify-content: space-between;

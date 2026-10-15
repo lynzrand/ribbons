@@ -2,6 +2,7 @@
 import { computed, useId } from "vue";
 import type { Ribbon } from "./sampler";
 import { sliceAndDice } from "./treemap";
+import { powerDiagram, powerSvg } from "./power-diagram";
 
 const props = withDefaults(
   defineProps<{
@@ -9,11 +10,41 @@ const props = withDefaults(
     aspectRatio: number;
     size?: number;
     circular?: boolean;
+    voronoi?: boolean;
   }>(),
   { size: 220 },
 );
 const clipId = useId();
-const ratio = computed(() => (props.circular ? 1 : props.aspectRatio));
+const ratio = computed(() =>
+  props.circular || props.voronoi ? 1 : props.aspectRatio,
+);
+interface GeometryInput {
+  enabled?: boolean;
+  seed: string;
+  weights: number[];
+}
+// Color-only edits must not rerun the numerical capacity solver.
+const geometryInput = computed(
+  (previous: GeometryInput | undefined): GeometryInput => {
+    const { widths, seed } = props.ribbon;
+    if (
+      previous &&
+      previous.enabled === props.voronoi &&
+      previous.seed === seed &&
+      previous.weights.length === widths.length &&
+      previous.weights.every((weight, index) => weight === widths[index])
+    )
+      return previous;
+    return { enabled: props.voronoi, seed, weights: widths };
+  },
+);
+const diagram = computed(() => {
+  const { enabled, seed, weights } = geometryInput.value;
+  return enabled ? powerDiagram(weights, seed) : undefined;
+});
+const diagramSvg = computed(() =>
+  diagram.value ? powerSvg(diagram.value, props.ribbon.colors, clipId) : "",
+);
 const tiles = computed(() =>
   sliceAndDice(
     props.ribbon.widths,
@@ -32,10 +63,11 @@ const tiles = computed(() =>
     role="img"
     :aria-label="`Color treemap: ${ribbon.colors.join(', ')}`"
   >
-    <defs v-if="circular">
+    <g v-if="voronoi" v-html="diagramSvg"></g>
+    <defs v-else-if="circular">
       <clipPath :id="clipId"><circle cx="0.5" cy="0.5" r="0.5" /></clipPath>
     </defs>
-    <g :clip-path="circular ? `url(#${clipId})` : undefined">
+    <g v-if="!voronoi" :clip-path="circular ? `url(#${clipId})` : undefined">
       <rect
         v-for="(tile, index) in tiles"
         :key="index"
