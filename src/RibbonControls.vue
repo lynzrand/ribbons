@@ -5,6 +5,9 @@ import OklabPicker from "./OklabPicker.vue";
 
 const settings = defineModel<RibbonOptions>({ required: true });
 const name = defineModel<string>("name", { required: true });
+const rerollOnChange = defineModel<boolean>("rerollOnChange", {
+  required: true,
+});
 const emit = defineEmits<{ generate: [] }>();
 const shellMode = computed({
   get: () => (settings.value.shellChance === null ? "auto" : "manual"),
@@ -56,6 +59,21 @@ const shellChance = computed({
     <button class="generate-button" @click="emit('generate')">
       Generate <span>↻</span>
     </button>
+    <label
+      class="reroll-option"
+      :title="
+        settings.seed.trim()
+          ? 'Clear the fixed seed to reroll automatically'
+          : ''
+      "
+    >
+      <input
+        v-model="rerollOnChange"
+        type="checkbox"
+        :disabled="Boolean(settings.seed.trim())"
+      />
+      Reroll seed on parameter change
+    </label>
     <details class="advanced">
       <summary>Options <span>+</span></summary>
       <label class="field-heading" for="identity-name">Name</label>
@@ -155,3 +173,19 @@ const shellChance = computed({
     </details>
   </aside>
 </template>
+
+<style scoped>
+.reroll-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.reroll-option input {
+  margin: 0;
+  accent-color: var(--green);
+}
+</style>

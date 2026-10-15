@@ -30,19 +30,25 @@ const notice = ref("");
 const selected = ref(0);
 const layout = ref<"strip" | "treemap">("treemap");
 const aspectRatio = ref(1);
+const rerollOnChange = ref(false);
 const variations = ref<Ribbon[]>([]);
 const saved = ref<SavedIdentity[]>(readSaved());
 const current = computed(() => variations.value[selected.value]);
 let noticeTimer: ReturnType<typeof setTimeout>;
 let updateTimer: ReturnType<typeof setTimeout>;
-// Keep the random stream stable while adjusting parameters.
+// Keep the random stream stable unless automatic rerolling is enabled.
 let explorationSeed: string = crypto.randomUUID();
 
 watch(
   settings,
   () => {
     clearTimeout(updateTimer);
-    updateTimer = setTimeout(generate, 100);
+    updateTimer = setTimeout(() => {
+      if (rerollOnChange.value && !settings.value.seed.trim()) {
+        explorationSeed = crypto.randomUUID();
+      }
+      generate();
+    }, 100);
   },
   { deep: true, flush: "sync" },
 );
@@ -240,6 +246,7 @@ generate();
         <RibbonControls
           v-model="settings"
           v-model:name="identityName"
+          v-model:reroll-on-change="rerollOnChange"
           @generate="shuffle"
         />
 

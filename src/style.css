@@ -256,7 +256,7 @@ h1 > span {
   font: 11px monospace;
   color: #6d7f60;
 }
-.controls input:not([type="range"]):not([type="color"]),
+.controls input:not([type="range"]):not([type="color"]):not([type="checkbox"]),
 select {
   width: 100%;
   border: 1px solid #e0e4d9;
@@ -1133,7 +1133,8 @@ footer p {
   .controls .field-heading {
     font-size: 12px;
   }
-  .controls input:not([type="range"]):not([type="color"]),
+  .controls
+    input:not([type="range"]):not([type="color"]):not([type="checkbox"]),
   select {
     font-size: 13px;
     padding: 11px;
