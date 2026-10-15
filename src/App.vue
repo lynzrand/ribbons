@@ -2,6 +2,8 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { generateRibbon, type Ribbon, type RibbonOptions } from "./sampler";
 import RibbonStrip from "./RibbonStrip.vue";
+import RibbonTreemap from "./RibbonTreemap.vue";
+import { sliceAndDice } from "./treemap";
 import RibbonControls from "./RibbonControls.vue";
 import RibbonPreview from "./RibbonPreview.vue";
 
@@ -26,6 +28,8 @@ const activeTab = ref<"explore" | "saved">("explore");
 const error = ref("");
 const notice = ref("");
 const selected = ref(0);
+const layout = ref<"strip" | "treemap">("treemap");
+const aspectRatio = ref(1);
 const variations = ref<Ribbon[]>([]);
 const saved = ref<SavedIdentity[]>(readSaved());
 const current = computed(() => variations.value[selected.value]);
@@ -159,14 +163,25 @@ function download(format: "svg" | "json") {
   if (format === "json")
     content = JSON.stringify({ name: identityName.value, ...ribbon }, null, 2);
   else {
-    let offset = 0;
-    const rectangles = ribbon.colors.map((color, index) => {
-      const width = ribbon.widths[index]! * 1000;
-      const rectangle = `<rect x="${offset}" width="${width}" height="40" fill="${color}"/>`;
-      offset += width;
-      return rectangle;
-    });
-    content = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="40" viewBox="0 0 1000 40">${rectangles.join("")}</svg>`;
+    const width = 1000;
+    const height = layout.value === "treemap" ? width / aspectRatio.value : 40;
+    const tiles =
+      layout.value === "treemap"
+        ? sliceAndDice(ribbon.widths, width, height)
+        : ribbon.widths.map((weight, index) => ({
+            x:
+              ribbon.widths
+                .slice(0, index)
+                .reduce((sum, value) => sum + value, 0) * width,
+            y: 0,
+            width: weight * width,
+            height,
+          }));
+    const rectangles = tiles.map(
+      (tile, index) =>
+        `<rect x="${tile.x}" y="${tile.y}" width="${tile.width}" height="${tile.height}" fill="${ribbon.colors[index]}"/>`,
+    );
+    content = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${rectangles.join("")}</svg>`;
   }
   const url = URL.createObjectURL(
     new Blob([content], {
@@ -229,7 +244,12 @@ generate();
         />
 
         <section v-if="current" class="results">
-          <RibbonPreview :ribbon="current" :identity-name="identityName" />
+          <RibbonPreview
+            v-model:layout="layout"
+            v-model:aspect-ratio="aspectRatio"
+            :ribbon="current"
+            :identity-name="identityName"
+          />
           <div class="variation-grid">
             <button
               v-for="(ribbon, index) in variations"
@@ -246,7 +266,13 @@ generate();
                   selected === index ? "✓" : "↗"
                 }}</span>
               </div>
-              <RibbonStrip :ribbon="ribbon" />
+              <RibbonTreemap
+                v-if="layout === 'treemap'"
+                :ribbon="ribbon"
+                :aspect-ratio="aspectRatio"
+                :size="64"
+              />
+              <RibbonStrip v-else :ribbon="ribbon" />
             </button>
           </div>
           <div class="selection-actions">
