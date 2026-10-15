@@ -7,6 +7,12 @@ export interface RibbonOptions {
   widthAlpha: number;
   rangeRadius: number;
   seed: string;
+  /** 0 favors soft lightness differences; 1 allows bold contrast. Default 0.5. */
+  contrast?: number;
+  /** 0 leaves chroma unrestricted; 1 favors the primary's saturation. Default 1. */
+  chromaAffinity?: number;
+  /** 0 permits unrelated hues; 1 pulls hues toward the primary. Default 0.5. */
+  primaryAffinity?: number;
   /** null selects a probability from the actual primary's lightness. */
   shellChance: number | null;
 }
@@ -77,17 +83,113 @@ export function lightnessShellChance(lightness: number): number {
   return 0.2 + 0.5 * position ** 2 * (3 - 2 * position);
 }
 
-function pairPreference(first: Lab, second: Lab): number {
+/** Hue evidence fades near gray, where hue angles stop being meaningful. */
+function hueRelationship(first: Lab, second: Lab) {
   const a = toLch(first);
   const b = toLch(second);
   const reliability =
     (a.c * b.c) / Math.sqrt((a.c ** 2 + 0.025 ** 2) * (b.c ** 2 + 0.025 ** 2));
-  const affiliation = (1 + reliability * Math.cos(a.h - b.h)) / 2;
-  return 0.55 * affiliation + 0.45 * Math.min(1, Math.abs(a.l - b.l) / 0.5);
+  const cosine = Math.cos(a.h - b.h);
+  return {
+    reliability,
+    affiliation: (1 + reliability * cosine) / 2,
+    difference: (reliability * (1 - cosine)) / 2,
+  };
+}
+
+/** Preference-only contrast, relative to the available lightness on that side.
+ * Physical OKLab distances still govern minimum separation and shell geometry.
+ */
+function relativeLightness(candidate: Lab, reference: Lab): number {
+  const difference = candidate.l - reference.l;
+  const headroom = difference < 0 ? reference.l : 1 - reference.l;
+  return difference === 0 ? 0 : Math.abs(difference) / headroom;
+}
+
+/** A heuristic, not a fitted preference model from Schloss & Palmer (2011).
+ * Their distinction between harmony and lightness contrast motivates separate controls.
+ * https://doi.org/10.3758/s13414-010-0027-0
+ */
+function pairPreference(first: Lab, second: Lab, hueWeight: number): number {
+  const affiliation =
+    0.5 + hueWeight * (hueRelationship(first, second).affiliation - 0.5);
+  const lightnessContrast = Math.min(1, relativeLightness(first, second) / 0.5);
+  return 0.55 * affiliation + 0.45 * lightnessContrast;
+}
+
+/** Intermediate hue differences can look muddy at the same pastel lightness.
+ * Prefer a lightness cue there; analogous and opposite hues remain available.
+ * This is a soft heuristic, not a forbidden hue range, and fades near gray.
+ */
+function pastelPairPenalty(candidate: Lab, selected: Lab[]): number {
+  const hue = toLch(candidate).h;
+  return Math.max(
+    ...selected.map((color) => {
+      const angle = hue - toLch(color).h;
+      const pastelLightness = clamp(
+        (Math.min(candidate.l, color.l) - 0.65) / 0.2,
+        0,
+        1,
+      );
+      // Zero at 0° and 180°, strongest at 90°; wrap-around follows naturally.
+      const intermediateHue = Math.sin(angle) ** 2;
+      const targetGap =
+        0.08 *
+        pastelLightness *
+        hueRelationship(candidate, color).reliability *
+        intermediateHue;
+      const shortfall = Math.max(
+        0,
+        targetGap - Math.abs(candidate.l - color.l),
+      );
+      return 0.5 * (shortfall / 0.025) ** 2;
+    }),
+  );
+}
+
+interface PaletteStyle {
+  contrast: number;
+  chromaAffinity: number;
+  primaryAffinity: number;
+}
+
+/** Soft preferences, not gamut cuts: contrast and saturation can vary independently. */
+function palettePenalty(
+  candidate: Lab,
+  selected: Lab[],
+  style: PaletteStyle,
+): number {
+  const primary = selected[0]!;
+  const primaryChroma = toLch(primary).c;
+  const excessChroma = Math.max(0, toLch(candidate).c - primaryChroma - 0.025);
+  const chromaPenalty =
+    0.5 * (excessChroma / (0.025 + 0.2 * primaryChroma)) ** 2;
+
+  // Light, low-chroma primaries get a smaller lightness budget at soft settings.
+  const pastel =
+    clamp((primary.l - 0.7) / 0.2, 0, 1) *
+    (1 - clamp((primaryChroma - 0.08) / 0.1, 0, 1));
+  const generalRange = 0.12 + 0.65 * style.contrast;
+  const pastelRange = 0.08 + 0.4 * style.contrast ** 2;
+  const lightnessRange = generalRange * (1 - pastel) + pastelRange * pastel;
+  const excessLightness = Math.max(
+    0,
+    Math.abs(candidate.l - primary.l) - lightnessRange,
+  );
+  const lightnessBand = 0.04 + 0.08 * style.contrast;
+  const lightnessPenalty = 0.5 * (excessLightness / lightnessBand) ** 2;
+  const huePenalty = hueRelationship(candidate, primary).difference;
+  return (
+    style.chromaAffinity * chromaPenalty +
+    lightnessPenalty +
+    style.primaryAffinity * huePenalty +
+    pastelPairPenalty(candidate, selected)
+  );
 }
 
 function conditionalColor(
   selected: Lab[],
+  style: PaletteStyle,
   random: Random,
 ): { next: Candidate; step: SamplingStep } {
   const scored = candidates().flatMap((candidate) => {
@@ -100,20 +202,42 @@ function conditionalColor(
     if (displayedDistance < minimumDistance || gridDistance < minimumDistance)
       return [];
     const preference = Math.min(
-      ...selected.map((color) => pairPreference(candidate.lab, color)),
+      ...selected.map((color, index) =>
+        pairPreference(
+          candidate.lab,
+          color,
+          index === 0 ? style.primaryAffinity : 1,
+        ),
+      ),
     );
+    // Scale by 0.5 so mid-lightness references retain the original distance scale.
+    const balancedDistance = Math.min(
+      ...selected.map((color) =>
+        Math.hypot(
+          0.5 * relativeLightness(candidate.lab, color),
+          candidate.lab.a - color.a,
+          candidate.lab.b - color.b,
+        ),
+      ),
+    );
+    const baseScore =
+      0.15 * Math.min(1, balancedDistance / 0.35) + 0.85 * preference;
     return [
       {
         candidate,
-        score: 0.15 * Math.min(1, gridDistance / 0.35) + 0.85 * preference,
+        baseScore,
+        score:
+          baseScore - 0.12 * palettePenalty(candidate.lab, selected, style),
       },
     ];
   });
   if (!scored.length) throw new Error("No conditional colors remain.");
+  // Use unpenalized scores for the sampling window: distant style outliers must
+  // not inflate its variance and accidentally broaden eligibility.
   const mean =
-    scored.reduce((sum, item) => sum + item.score, 0) / scored.length;
+    scored.reduce((sum, item) => sum + item.baseScore, 0) / scored.length;
   const variance =
-    scored.reduce((sum, item) => sum + item.score ** 2, 0) / scored.length -
+    scored.reduce((sum, item) => sum + item.baseScore ** 2, 0) / scored.length -
     mean ** 2;
   const threshold =
     Math.max(...scored.map((item) => item.score)) -
@@ -134,6 +258,7 @@ function shellColor(
   selected: Lab[],
   radius: number,
   band: number,
+  style: PaletteStyle,
   random: Random,
 ): { next: Candidate; step: SamplingStep } {
   const parent = Math.floor(random() * selected.length);
@@ -142,7 +267,8 @@ function shellColor(
   // Densities are relative to the uniform OKLab grid. Exclusion uses displayed colors.
   const logDensities = candidates().map((candidate) => {
     let density =
-      -0.5 * ((distance(candidate.lab, center) - radius) / band) ** 2 -
+      -4 * palettePenalty(candidate.lab, selected, style) -
+      0.5 * ((distance(candidate.lab, center) - radius) / band) ** 2 -
       0.5 * ((toLch(candidate.lab).c - chroma) / (0.03 + 0.3 * chroma)) ** 2;
     for (const color of selected) {
       const separation = distance(candidate.displayed, color);
@@ -218,9 +344,26 @@ function samplePrimary(center: Lab, radius: number, random: Random): string {
   );
 }
 
-/** Reproducible v0.16 sampling, rewritten in TypeScript; no semantic text mapping. */
+/** Hybrid OKLab sampling with primary-relative style controls; no semantic text mapping. */
 export function generateRibbon(options: RibbonOptions): Ribbon {
-  const { lab, count, widthAlpha, rangeRadius, shellChance } = options;
+  const {
+    lab,
+    count,
+    widthAlpha,
+    rangeRadius,
+    shellChance,
+    contrast = 0.5,
+    chromaAffinity = 1,
+    primaryAffinity = 0.5,
+  } = options;
+  const style = { contrast, chromaAffinity, primaryAffinity };
+  if (
+    ![contrast, chromaAffinity, primaryAffinity].every(
+      (value) => Number.isFinite(value) && value >= 0 && value <= 1,
+    )
+  ) {
+    throw new Error("Contrast and affinities must be between 0 and 1.");
+  }
   if (![lab.l, lab.a, lab.b].every(Number.isFinite) || lab.l < 0 || lab.l > 1)
     throw new Error("Invalid OKLab coordinates.");
   if (!Number.isInteger(count) || count < 2 || count > 7)
@@ -247,8 +390,8 @@ export function generateRibbon(options: RibbonOptions): Ribbon {
   for (let index = 1; index < count; index++) {
     const result =
       random() < chance
-        ? shellColor(selected, radius, band, random)
-        : conditionalColor(selected, random);
+        ? shellColor(selected, radius, band, style, random)
+        : conditionalColor(selected, style, random);
     generatedColors.push(result.next.color);
     selected.push(result.next.displayed);
     steps.push(result.step);
@@ -272,7 +415,14 @@ export function generateRibbon(options: RibbonOptions): Ribbon {
     primaryIndex,
     generatedColors,
     seed,
-    options: { ...options, lab: { ...lab }, seed },
+    options: {
+      ...options,
+      lab: { ...lab },
+      seed,
+      contrast,
+      chromaAffinity,
+      primaryAffinity,
+    },
     profile: { shellChance: chance, radius, band, steps },
   };
 }

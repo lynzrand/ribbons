@@ -23,6 +23,23 @@ const shellChance = computed({
 <template>
   <aside class="controls panel">
     <OklabPicker v-model="settings.lab" />
+    <div class="control-group range-control">
+      <label class="field-heading" for="contrast"
+        >Contrast
+        <output
+          >{{ Math.round((settings.contrast ?? 0.5) * 100) }}%</output
+        ></label
+      >
+      <input
+        id="contrast"
+        v-model.number="settings.contrast"
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+      />
+      <div class="range-labels"><span>Soft</span><span>Bold</span></div>
+    </div>
     <div class="control-group segment-control">
       <label class="field-heading" for="color-count"
         >Segments <output>{{ settings.count }}</output></label
@@ -48,6 +65,40 @@ const shellChance = computed({
         maxlength="80"
         placeholder="Identity name"
       />
+      <label class="field-heading" for="primary-affinity"
+        >Primary affinity
+        <output
+          >{{ Math.round((settings.primaryAffinity ?? 0.5) * 100) }}%</output
+        ></label
+      >
+      <input
+        id="primary-affinity"
+        v-model.number="settings.primaryAffinity"
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+      />
+      <div class="range-labels">
+        <span>Free hues</span><span>Related hues</span>
+      </div>
+      <label class="field-heading" for="chroma-affinity"
+        >Chroma affinity
+        <output
+          >{{ Math.round((settings.chromaAffinity ?? 1) * 100) }}%</output
+        ></label
+      >
+      <input
+        id="chroma-affinity"
+        v-model.number="settings.chromaAffinity"
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+      />
+      <div class="range-labels">
+        <span>Free</span><span>Match primary</span>
+      </div>
       <label class="field-heading" for="color-range"
         >Color range
         <output>{{ settings.rangeRadius.toFixed(3) }}</output></label

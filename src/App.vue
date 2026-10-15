@@ -17,6 +17,9 @@ const settings = ref<RibbonOptions>({
   rangeRadius: 0,
   seed: "",
   shellChance: null,
+  contrast: 0.5,
+  chromaAffinity: 1,
+  primaryAffinity: 0.5,
 });
 const identityName = ref("Studio laptop");
 const activeTab = ref<"explore" | "saved">("explore");
@@ -135,6 +138,9 @@ function removeIdentity(id: string) {
 }
 function openIdentity(entry: SavedIdentity) {
   settings.value = {
+    contrast: 0.5,
+    chromaAffinity: 1,
+    primaryAffinity: 0.5,
     ...entry.ribbon.options,
     lab: { ...entry.ribbon.options.lab },
   };
