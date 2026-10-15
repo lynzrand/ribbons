@@ -64,3 +64,61 @@ test("weights are relative, the final tile fills the remainder, and inputs stay 
   assert.throws(() => sliceAndDice([], 1, 1), /positive/);
   assert.throws(() => sliceAndDice([1], 0, 1), /positive/);
 });
+
+test("circular cuts preserve visible disk areas rather than square areas", () => {
+  const weights = [0.49, 0.07, 0.17, 0.27];
+  const tiles = sliceAndDice(weights, 1, 1, "circle");
+  // Independently integrate vertical disk chords; do not reuse the solver's area formula.
+  function visibleArea(tile: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }) {
+    const steps = 20000;
+    const dx = tile.width / steps;
+    let area = 0;
+    for (let index = 0; index < steps; index++) {
+      const x = tile.x + (index + 0.5) * dx;
+      const halfChord = Math.sqrt(Math.max(0, 0.25 - (x - 0.5) ** 2));
+      area +=
+        Math.max(
+          0,
+          Math.min(tile.y + tile.height, 0.5 + halfChord) -
+            Math.max(tile.y, 0.5 - halfChord),
+        ) * dx;
+    }
+    return area;
+  }
+  tiles.forEach((tile, index) => {
+    assert.ok(
+      Math.abs(visibleArea(tile) / (Math.PI / 4) - weights[index]!) < 1e-6,
+    );
+  });
+  // A 49% disk slice does not consume 49% of the square's width.
+  assert.ok(Math.abs(tiles[0]!.width - weights[0]!) > 0.001);
+  const scaled = sliceAndDice(weights, 1000, 1000, "circle");
+  scaled.forEach((tile, index) => {
+    assert.ok(Math.abs(tile.x / 1000 - tiles[index]!.x) < 1e-12);
+    assert.ok(Math.abs(tile.width / 1000 - tiles[index]!.width) < 1e-12);
+  });
+  assert.throws(() => sliceAndDice(weights, 2, 1, "circle"), /square/);
+});
+
+test("balanced groups spread equal weights across quadrants instead of peeling toward a corner", () => {
+  // Sequential carving previously left increasingly small regions at bottom right.
+  assert.deepEqual(sliceAndDice([1, 1, 1, 1], 1, 1), [
+    { x: 0, y: 0, width: 0.5, height: 0.5 },
+    { x: 0, y: 0.5, width: 0.5, height: 0.5 },
+    { x: 0.5, y: 0, width: 0.5, height: 0.5 },
+    { x: 0.5, y: 0.5, width: 0.5, height: 0.5 },
+  ]);
+  const circular = sliceAndDice([1, 1, 1, 1], 1, 1, "circle");
+  circular.forEach((tile, index) => {
+    const expected = sliceAndDice([1, 1, 1, 1], 1, 1)[index]!;
+    assert.ok(Math.abs(tile.x - expected.x) < 1e-12);
+    assert.ok(Math.abs(tile.y - expected.y) < 1e-12);
+    assert.ok(Math.abs(tile.width - expected.width) < 1e-12);
+    assert.ok(Math.abs(tile.height - expected.height) < 1e-12);
+  });
+});
