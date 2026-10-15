@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, useId } from "vue";
-import type { Ribbon } from "./sampler";
-import { sliceAndDice } from "./treemap";
-import { powerDiagram, powerSvg } from "./power-diagram";
+import type { Ribbon } from "@ribbons/core";
+import { sliceAndDice } from "@ribbons/core";
+import { powerDiagram, powerSvg } from "@ribbons/core";
 
 const props = withDefaults(
   defineProps<{

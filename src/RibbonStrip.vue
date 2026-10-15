@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Ribbon } from "./sampler";
+import type { Ribbon } from "@ribbons/core";
 defineProps<{ ribbon: Ribbon; markPrimary?: boolean }>();
 </script>
 

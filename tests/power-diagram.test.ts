@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { powerCell, powerDiagram, powerSvg } from "../src/power-diagram.ts";
+import { powerCell, powerDiagram, powerSvg } from "@ribbons/core";
 
 test("power cells fit target disk areas on an independent finer grid", () => {
   for (const weights of [

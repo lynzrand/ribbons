@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { circleArea } from "../src/circle-area.ts";
+import { circleArea } from "@ribbons/core";
 
 test("disk intersection agrees with known whole, half, quarter, and cap areas", () => {
   assert.ok(

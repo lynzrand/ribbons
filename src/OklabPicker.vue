@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { inGamut, linearRgb, toHex, type Lab } from "./color";
+import { inGamut, linearRgb, toHex, type Lab } from "@ribbons/core";
 
 const lab = defineModel<Lab>({ required: true });
 const canvas = ref<HTMLCanvasElement>();

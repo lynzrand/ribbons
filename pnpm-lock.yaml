@@ -166,6 +166,9 @@ importers:
 
   .:
     dependencies:
+      '@ribbons/core':
+        specifier: workspace:*
+        version: link:packages/ribbon-core
       vue:
         specifier: ^3.5.44
         version: 3.5.44(typescript@5.9.3)
@@ -188,6 +191,8 @@ importers:
       vue-tsc:
         specifier: ^3.3.13
         version: 3.3.13(typescript@5.9.3)
+
+  packages/ribbon-core: {}
 
 packages:
 

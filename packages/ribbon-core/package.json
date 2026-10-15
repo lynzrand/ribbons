@@ -1,0 +1,23 @@
+{
+  "name": "@ribbons/core",
+  "version": "0.1.0",
+  "description": "Deterministic OKLab identity palettes and area-weighted avatar layouts.",
+  "type": "module",
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./experiments": {
+      "types": "./dist/experiments.d.ts",
+      "import": "./dist/experiments.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
+}

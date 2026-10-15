@@ -1,6 +1,7 @@
 import { distance, fromHex, inGamut, toHex, toLch, type Lab } from "./color.ts";
 
-type Random = () => number;
+import { seededRandom, type Random } from "./random.ts";
+import { fullModel, type SamplingFeatures } from "./sampling-features.ts";
 export interface RibbonOptions {
   lab: Lab;
   count: number;
@@ -47,19 +48,6 @@ interface Candidate {
 const minimumDistance = 0.045;
 const clamp = (value: number, low: number, high: number) =>
   Math.max(low, Math.min(high, value));
-
-/** FNV-1a seed hashing followed by the baseline's Mulberry32 stream. */
-export function seededRandom(seed: string): Random {
-  let state = 2166136261;
-  for (const character of seed)
-    state = Math.imul(state ^ character.charCodeAt(0), 16777619);
-  return () => {
-    state += 0x6d2b79f5;
-    let value = Math.imul(state ^ (state >>> 15), 1 | state);
-    value ^= value + Math.imul(value ^ (value >>> 7), 61 | value);
-    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 let candidateGrid: Candidate[] | undefined;
 function candidates(): Candidate[] {
@@ -110,10 +98,18 @@ function relativeLightness(candidate: Lab, reference: Lab): number {
  * Their distinction between harmony and lightness contrast motivates separate controls.
  * https://doi.org/10.3758/s13414-010-0027-0
  */
-function pairPreference(first: Lab, second: Lab, hueWeight: number): number {
+function pairPreference(
+  first: Lab,
+  second: Lab,
+  hueWeight: number,
+  balance: boolean,
+): number {
   const affiliation =
     0.5 + hueWeight * (hueRelationship(first, second).affiliation - 0.5);
-  const lightnessContrast = Math.min(1, relativeLightness(first, second) / 0.5);
+  const difference = balance
+    ? relativeLightness(first, second)
+    : Math.abs(first.l - second.l);
+  const lightnessContrast = Math.min(1, difference / 0.5);
   return 0.55 * affiliation + 0.45 * lightnessContrast;
 }
 
@@ -148,6 +144,7 @@ function pastelPairPenalty(candidate: Lab, selected: Lab[]): number {
 }
 
 interface PaletteStyle {
+  features: Readonly<SamplingFeatures>;
   contrast: number;
   chromaAffinity: number;
   primaryAffinity: number;
@@ -181,9 +178,11 @@ function palettePenalty(
   const huePenalty = hueRelationship(candidate, primary).difference;
   return (
     style.chromaAffinity * chromaPenalty +
-    lightnessPenalty +
+    (style.features.lightnessPrior ? lightnessPenalty : 0) +
     style.primaryAffinity * huePenalty +
-    pastelPairPenalty(candidate, selected)
+    (style.features.pastelSeparation
+      ? pastelPairPenalty(candidate, selected)
+      : 0)
   );
 }
 
@@ -207,6 +206,7 @@ function conditionalColor(
           candidate.lab,
           color,
           index === 0 ? style.primaryAffinity : 1,
+          style.features.lightnessBalance,
         ),
       ),
     );
@@ -214,7 +214,9 @@ function conditionalColor(
     const balancedDistance = Math.min(
       ...selected.map((color) =>
         Math.hypot(
-          0.5 * relativeLightness(candidate.lab, color),
+          style.features.lightnessBalance
+            ? 0.5 * relativeLightness(candidate.lab, color)
+            : Math.abs(candidate.lab.l - color.l),
           candidate.lab.a - color.a,
           candidate.lab.b - color.b,
         ),
@@ -345,7 +347,10 @@ function samplePrimary(center: Lab, radius: number, random: Random): string {
 }
 
 /** Hybrid OKLab sampling with primary-relative style controls; no semantic text mapping. */
-export function generateRibbon(options: RibbonOptions): Ribbon {
+export function sampleRibbon(
+  options: RibbonOptions,
+  features: Readonly<SamplingFeatures>,
+): Ribbon {
   const {
     lab,
     count,
@@ -356,7 +361,7 @@ export function generateRibbon(options: RibbonOptions): Ribbon {
     chromaAffinity = 1,
     primaryAffinity = 0.5,
   } = options;
-  const style = { contrast, chromaAffinity, primaryAffinity };
+  const style = { contrast, chromaAffinity, primaryAffinity, features };
   if (
     ![contrast, chromaAffinity, primaryAffinity].every(
       (value) => Number.isFinite(value) && value >= 0 && value <= 1,
@@ -425,4 +430,9 @@ export function generateRibbon(options: RibbonOptions): Ribbon {
     },
     profile: { shellChance: chance, radius, band, steps },
   };
+}
+
+/** Production entry point: all accepted sampling terms are enabled. */
+export function generateRibbon(options: RibbonOptions): Ribbon {
+  return sampleRibbon(options, fullModel);
 }

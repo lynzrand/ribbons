@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import type { Ribbon } from "./sampler";
+import type { Ribbon } from "@ribbons/core";
 import RibbonStrip from "./RibbonStrip.vue";
 import RibbonTreemap from "./RibbonTreemap.vue";
 

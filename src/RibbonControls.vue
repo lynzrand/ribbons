@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { RibbonOptions } from "./sampler";
+import type { RibbonOptions } from "@ribbons/core";
 import OklabPicker from "./OklabPicker.vue";
 
 const settings = defineModel<RibbonOptions>({ required: true });

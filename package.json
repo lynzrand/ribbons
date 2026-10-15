@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "A Vue and TypeScript playground for generative color ribbon identities.",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev": "pnpm build:lib && vite --host 0.0.0.0",
+    "build": "pnpm build:lib && vue-tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "format": "prettier --write src tests scripts index.html vite.config.ts tsconfig.json package.json",
-    "format:check": "prettier --check src tests scripts index.html vite.config.ts tsconfig.json package.json",
-    "study": "node --experimental-strip-types scripts/ribbon-study.ts"
+    "test": "pnpm build:lib && node --experimental-strip-types --test tests/*.test.ts",
+    "format": "prettier --write src packages tests scripts index.html vite.config.ts tsconfig.json package.json",
+    "format:check": "prettier --check src packages tests scripts index.html vite.config.ts tsconfig.json package.json",
+    "study": "pnpm build:lib && node --experimental-strip-types scripts/ribbon-study.ts",
+    "build:lib": "tsc -p packages/ribbon-core/tsconfig.json",
+    "ablate": "pnpm build:lib && node --experimental-strip-types scripts/ablation.ts"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +26,8 @@
   "packageManager": "pnpm@12.11.2",
   "type": "module",
   "dependencies": {
-    "vue": "^3.5.44"
+    "vue": "^3.5.44",
+    "@ribbons/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
@@ -33,5 +36,6 @@
     "typescript": "~5.9.3",
     "vite": "^8.3.4",
     "vue-tsc": "^3.3.13"
-  }
+  },
+  "private": true
 }

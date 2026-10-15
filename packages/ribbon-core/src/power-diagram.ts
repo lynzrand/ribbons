@@ -1,4 +1,4 @@
-import { seededRandom } from "./sampler.ts";
+import { seededRandom } from "./random.ts";
 
 export interface Site {
   x: number;

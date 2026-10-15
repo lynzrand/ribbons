@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-import { generateRibbon, type Ribbon, type RibbonOptions } from "./sampler";
+import {
+  softPreset,
+  generateRibbon,
+  type Ribbon,
+  type RibbonOptions,
+} from "@ribbons/core";
 import RibbonStrip from "./RibbonStrip.vue";
 import RibbonTreemap from "./RibbonTreemap.vue";
-import { sliceAndDice } from "./treemap";
-import { powerDiagram, powerSvg } from "./power-diagram";
+import { sliceAndDice } from "@ribbons/core";
+import { powerDiagram, powerSvg } from "@ribbons/core";
 import RibbonControls from "./RibbonControls.vue";
 import RibbonPreview from "./RibbonPreview.vue";
 
@@ -13,17 +18,7 @@ interface SavedIdentity {
   name: string;
   ribbon: Ribbon;
 }
-const settings = ref<RibbonOptions>({
-  lab: { l: 0.6, a: -0.07, b: -0.02 },
-  count: 4,
-  widthAlpha: 0.8,
-  rangeRadius: 0,
-  seed: "",
-  shellChance: null,
-  contrast: 0.5,
-  chromaAffinity: 1,
-  primaryAffinity: 0.5,
-});
+const settings = ref<RibbonOptions>(structuredClone(softPreset));
 const identityName = ref("Studio laptop");
 const activeTab = ref<"explore" | "saved">("explore");
 const error = ref("");

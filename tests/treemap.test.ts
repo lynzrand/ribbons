@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { sliceAndDice } from "../src/treemap.ts";
+import { sliceAndDice } from "@ribbons/core";
 
 test("square layout preserves order and slices the longest remaining edge", () => {
   assert.deepEqual(sliceAndDice([0.5, 0.25, 0.25], 1, 1), [

@@ -1,7 +1,7 @@
 /** Regenerate the visual study with `pnpm study`; no browser or image dependencies. */
 import { mkdirSync, writeFileSync } from "node:fs";
-import { fromHex } from "../src/color.ts";
-import { generateRibbon } from "../src/sampler.ts";
+import { fromHex } from "@ribbons/core";
+import { generateRibbon } from "@ribbons/core";
 
 const anchors = [
   // Approximate the blue in the supplied Asagi image, not an extracted color value.

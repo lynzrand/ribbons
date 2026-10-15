@@ -1,11 +1,11 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { distance, fromHex, toHex, toLch } from "../src/color.ts";
+import { distance, fromHex, toHex, toLch } from "@ribbons/core";
 import {
   generateRibbon,
   lightnessShellChance,
   type RibbonOptions,
-} from "../src/sampler.ts";
+} from "@ribbons/core";
 
 const settings: RibbonOptions = {
   lab: { l: 0.6, a: -0.07, b: -0.02 },

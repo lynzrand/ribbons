@@ -1,4 +1,4 @@
-import type { Tile } from "./treemap";
+import type { Tile } from "./treemap.ts";
 
 /** Area inside both a rectangle and the unit circle centered at (0.5, 0.5). */
 export function circleArea(tile: Tile): number {
