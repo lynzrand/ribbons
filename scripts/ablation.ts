@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
+import { tmpdir } from "node:os";
 import { parseArgs } from "node:util";
 import {
   distance,
@@ -15,7 +16,10 @@ const { values } = parseArgs({
   options: {
     seeds: { type: "string", default: "8" },
     count: { type: "string", default: String(softPreset.count) },
-    out: { type: "string", default: "artifacts/ablation" },
+    out: {
+      type: "string",
+      default: join(tmpdir(), "ribbons-ablation", "ablation"),
+    },
   },
 });
 const seeds = Number(values.seeds);
