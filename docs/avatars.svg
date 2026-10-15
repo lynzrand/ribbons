@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="174" viewBox="0 0 960 174" role="img" aria-labelledby="title"><title id="title">The same three palettes as treemaps, circular splits, and power diagrams</title><rect width="960" height="174" rx="16" fill="#f6f5f0"/>
+<text x="32" y="36" font-family="sans-serif" font-size="14" fill="#617268">Treemap</text>
+<g transform="translate(32 62)">
+<rect x="0" y="0" width="40.73491908054768" height="76" fill="#57b0f6"/>
+<rect x="40.73491908054768" y="0" width="35.26508091945232" height="40.977397504233636" fill="#a198be"/>
+<rect x="40.73491908054768" y="40.977397504233636" width="10.567679407006722" height="35.022602495766364" fill="#d1c7ef"/>
+<rect x="51.3025984875544" y="40.977397504233636" width="24.6974015124456" height="35.022602495766364" fill="#917eda"/>
+</g>
+<g transform="translate(130 62)">
+<rect x="0" y="0" width="30.48454960610553" height="61.57004281488325" fill="#e7b7d0"/>
+<rect x="0" y="61.57004281488325" width="30.48454960610553" height="14.429957185116749" fill="#78b697"/>
+<rect x="30.48454960610553" y="0" width="45.51545039389447" height="67.27705795186307" fill="#f0d1ff"/>
+<rect x="30.48454960610553" y="67.27705795186307" width="45.51545039389447" height="8.722942048136929" fill="#eeeeee"/>
+</g>
+<g transform="translate(228 62)">
+<rect x="0" y="0" width="13.81673864047493" height="24.615490233016306" fill="#cfb368"/>
+<rect x="13.81673864047493" y="0" width="22.824087541049835" height="24.615490233016306" fill="#baad8a"/>
+<rect x="0" y="24.615490233016306" width="36.640826181524766" height="51.3845097669837" fill="#dfcfe6"/>
+<rect x="36.640826181524766" y="0" width="39.359173818475234" height="76" fill="#bbdfc6"/>
+</g>
+<text x="344" y="36" font-family="sans-serif" font-size="14" fill="#617268">Circle</text>
+<g transform="translate(344 62)">
+<defs><clipPath id="circle-0"><circle cx="38" cy="38" r="38"/></clipPath></defs><g clip-path="url(#circle-0)">
+<rect x="0" y="0" width="40.14914669652619" height="76" fill="#57b0f6"/>
+<rect x="40.14914669652619" y="0.060822775436859766" width="35.85085330347381" height="40.24090427724827" fill="#a198be"/>
+<rect x="40.14914669652619" y="40.30172705268513" width="8.282616681160299" height="35.63745017187801" fill="#d1c7ef"/>
+<rect x="48.43176337768649" y="40.30172705268513" width="27.498462729930342" height="34.23836480313755" fill="#917eda"/>
+</g>
+</g>
+<g transform="translate(442 62)">
+<defs><clipPath id="circle-1"><circle cx="38" cy="38" r="38"/></clipPath></defs><g clip-path="url(#circle-1)">
+<rect x="0" y="0.4650326137351801" width="32.07326200072619" height="56.02847427108989" fill="#e7b7d0"/>
+<rect x="4.803762214658611" y="56.49350688482508" width="27.269499786067577" height="19.041460501439737" fill="#78b697"/>
+<rect x="32.07326200072619" y="0" width="43.92673799927381" height="63.65047602273076" fill="#f0d1ff"/>
+<rect x="32.07326200072619" y="63.65047602273076" width="33.963376168057785" height="12.349523977269243" fill="#eeeeee"/>
+</g>
+</g>
+<g transform="translate(540 62)">
+<defs><clipPath id="circle-2"><circle cx="38" cy="38" r="38"/></clipPath></defs><g clip-path="url(#circle-2)">
+<rect x="1.4999897968136409" y="4.612467184654771" width="18.354138702918167" height="22.816380788849177" fill="#cfb368"/>
+<rect x="19.85412849973181" y="0.015000861224215178" width="17.07823840448903" height="27.413847112279733" fill="#baad8a"/>
+<rect x="0" y="27.42884797350395" width="36.93236690422084" height="48.556151165271835" fill="#dfcfe6"/>
+<rect x="36.93236690422084" y="0" width="39.06763309577916" height="76" fill="#bbdfc6"/>
+</g>
+</g>
+<text x="656" y="36" font-family="sans-serif" font-size="14" fill="#617268">Power diagram</text>
+<g transform="translate(656 62)">
+<g transform="scale(76)"><defs><clipPath id="power-0-disk"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath></defs><g clip-path="url(#power-0-disk)"><polygon points="1,0.21322740011628302 1,1 0.4821303917518017,1 0.28421107940369866,0.5595152888813686 0.5558352889962098,0.18390861380882695" fill="#57b0f6"/><polygon points="0,0 0.4828914652234493,0 0.5558352889962096,0.18390861380882706 0.2842110794036986,0.5595152888813684 0,0.5424291299759918" fill="#a198be"/><polygon points="0.4828914652234493,0 1,0 1,0.213227400116283 0.5558352889962096,0.18390861380882687" fill="#d1c7ef"/><polygon points="0.28421107940369855,0.5595152888813685 0.4821303917518016,1 0,1 0,0.5424291299759919" fill="#917eda"/></g></g>
+</g>
+<g transform="translate(754 62)">
+<g transform="scale(76)"><defs><clipPath id="power-1-disk"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath></defs><g clip-path="url(#power-1-disk)"><polygon points="0.8317611129146668,0 1,0 1,1 0.9275100373614806,1 0.4711188795664947,0.7609079680705944" fill="#e7b7d0"/><polygon points="0.3904177193805025,1 0,1 0,0.6930971146775631 0.4387777083324658,0.7738670160909146" fill="#78b697"/><polygon points="0,0 0.8317611129146669,0 0.47111887956649473,0.7609079680705946 0.4387777083324662,0.7738670160909146 0,0.6930971146775633" fill="#f0d1ff"/><polygon points="0.9275100373614805,1 0.39041771938050285,1 0.4387777083324661,0.7738670160909148 0.471118879566495,0.7609079680705946" fill="#eeeeee"/></g></g>
+</g>
+<g transform="translate(852 62)">
+<g transform="scale(76)"><defs><clipPath id="power-2-disk"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath></defs><g clip-path="url(#power-2-disk)"><polygon points="1,0.4222434531258381 1,1 0.8675477411072653,1 0.8139405133589304,0.5594601871325966" fill="#cfb368"/><polygon points="0,0 0.3009402695615893,0 0.31247436674816925,0.31261267882123256 0,0.5111095027607884" fill="#baad8a"/><polygon points="0.3009402695615892,0 1,0 1,0.42224345312583844 0.8139405133589304,0.559460187132597 0.3124743667481692,0.31261267882123256" fill="#dfcfe6"/><polygon points="0.8139405133589303,0.559460187132597 0.8675477411072652,1 0,1 0,0.5111095027607881 0.31247436674816925,0.31261267882123245" fill="#bbdfc6"/></g></g>
+</g>
+</svg>

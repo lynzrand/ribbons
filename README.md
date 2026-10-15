@@ -4,11 +4,13 @@ Color as identity: choose a main color and generate a small, weighted palette fo
 
 [Open the playground](https://lynzrand.github.io/ribbons/)
 
-![Three palettes shown as ribbons, square avatars, and circular avatars](docs/preview.svg)
+![Thirty generated color ribbons](docs/preview.svg)
 
 Pick a color directly in OKLab, then adjust contrast, hue affinity, and chroma affinity. Soft colors can stay pastel; dull colors can stay subdued. Parameters update the previews automatically, with an option to reroll the random seed on every change.
 
 The same colors and weights work as a thin ribbon, a rectangular treemap, or a circular avatar using area-aware splits or a weighted power diagram. Save identities in your browser, reuse their seeds, and export SVG or palette JSON. No server or account is needed.
+
+![The same palettes as treemaps, circular splits, and power diagrams](docs/avatars.svg)
 
 ## Run locally
 
