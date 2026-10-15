@@ -72,44 +72,12 @@ button:active {
 }
 .brand {
   font-family: Manrope, sans-serif;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: -1.5px;
   display: flex;
   align-items: center;
   gap: 10px;
-}
-.brand-icon {
-  height: 25px;
-  display: flex;
-  gap: 3px;
-  align-items: center;
-  transform: rotate(-12deg);
-}
-.brand-icon i {
-  display: block;
-  width: 7px;
-  height: 25px;
-  background: #547e6b;
-  border-radius: 2px;
-}
-.brand-icon i:nth-child(2) {
-  background: #b9c3a1;
-  height: 21px;
-}
-.brand-icon i:nth-child(3) {
-  background: #d1a06c;
-  height: 17px;
-}
-.beta {
-  align-self: flex-start;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  padding: 4px 5px;
-  background: #e7eadf;
-  border-radius: 3px;
-  margin: 4px 0 0 1px;
 }
 .topbar nav {
   display: flex;
@@ -136,13 +104,13 @@ button:active {
   border-radius: 4px;
   margin-left: 7px;
 }
-.version {
-  font-family: monospace;
-  font-size: 10px;
-  color: #7d897a;
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.github-link {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.github-link:hover {
+  color: var(--ink);
 }
 .status-dot {
   display: inline-block;
@@ -1073,14 +1041,6 @@ footer p {
   }
   .brand {
     font-size: 24px;
-  }
-  .brand-icon {
-    transform: scale(0.85) rotate(-12deg);
-    margin-right: -4px;
-  }
-  .beta {
-    font-size: 7px;
-    margin-left: -3px;
   }
   .topbar nav {
     gap: 15px;

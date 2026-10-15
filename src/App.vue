@@ -230,12 +230,7 @@ generate();
 <template>
   <div class="app-shell">
     <header class="topbar">
-      <a href="#" class="brand" aria-label="Ribbons home"
-        ><span class="brand-icon"><i></i><i></i><i></i></span>ribbons<span
-          class="beta"
-          >LAB</span
-        ></a
-      >
+      <a href="#" class="brand" aria-label="Ribbons home">ribbons</a>
       <nav aria-label="Main navigation">
         <button
           :class="{ active: activeTab === 'explore' }"
@@ -247,11 +242,13 @@ generate();
           :class="{ active: activeTab === 'saved' }"
           @click="activeTab = 'saved'"
         >
-          Saved identities
-          <span>{{ saved.length.toString().padStart(2, "0") }}</span>
+          Saved
+          <span>{{ saved.length }}</span>
         </button>
       </nav>
-      <span class="version"><span class="status-dot"></span> OKLab</span>
+      <a class="github-link" href="https://github.com/lynzrand/ribbons"
+        >GitHub ↗</a
+      >
     </header>
 
     <main>
