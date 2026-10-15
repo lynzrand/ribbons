@@ -7,8 +7,9 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
-    "format": "prettier --write src tests index.html vite.config.ts tsconfig.json package.json",
-    "format:check": "prettier --check src tests index.html vite.config.ts tsconfig.json package.json"
+    "format": "prettier --write src tests scripts index.html vite.config.ts tsconfig.json package.json",
+    "format:check": "prettier --check src tests scripts index.html vite.config.ts tsconfig.json package.json",
+    "study": "node --experimental-strip-types scripts/ribbon-study.ts"
   },
   "keywords": [],
   "author": "",
