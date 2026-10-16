@@ -1,25 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Ribbon } from '@ribbons/core'
-import RibbonStrip from './RibbonStrip.vue'
-import RibbonTreemap from './RibbonTreemap.vue'
+import { ref } from "vue";
+import type { Ribbon } from "@ribbons/core";
+import RibbonStrip from "./RibbonStrip.vue";
+import RibbonTreemap from "./RibbonTreemap.vue";
 
-defineProps<{ ribbon: Ribbon }>()
-const previewMode = ref('avatar')
-const layout = defineModel<'strip' | 'treemap' | 'circle' | 'power' | 'donut'>('layout', {
-  required: true,
-})
-const aspectRatio = defineModel<number>('aspectRatio', { required: true })
-const name = defineModel<string>('name', { required: true })
+defineProps<{ ribbon: Ribbon }>();
+const previewMode = ref("avatar");
+const layout = defineModel<"strip" | "treemap" | "circle" | "power" | "donut">(
+  "layout",
+  {
+    required: true,
+  },
+);
+const aspectRatio = defineModel<number>("aspectRatio", { required: true });
+const name = defineModel<string>("name", { required: true });
 const emit = defineEmits<{
-  export: [format: 'svg' | 'json']
-  save: []
-  copyColor: [color: string]
-  copyPalette: []
-}>()
+  export: [format: "svg" | "json"];
+  save: [];
+  copyColor: [color: string];
+  copyPalette: [];
+}>();
 function setRatio(event: Event) {
-  const value = (event.target as HTMLInputElement).valueAsNumber
-  if (Number.isFinite(value) && value > 0) aspectRatio.value = value
+  const value = (event.target as HTMLInputElement).valueAsNumber;
+  if (Number.isFinite(value) && value > 0) aspectRatio.value = value;
 }
 </script>
 
@@ -28,11 +31,27 @@ function setRatio(event: Event) {
     <div class="selected-ribbon">
       <div class="layout-controls">
         <div class="layout-switch" aria-label="Layout">
-          <button :aria-pressed="layout === 'strip'" @click="layout = 'strip'">Ribbon</button>
-          <button :aria-pressed="layout === 'treemap'" @click="layout = 'treemap'">Treemap</button>
-          <button :aria-pressed="layout === 'circle'" @click="layout = 'circle'">Circle</button>
-          <button :aria-pressed="layout === 'power'" @click="layout = 'power'">Power</button>
-          <button :aria-pressed="layout === 'donut'" @click="layout = 'donut'">Donut</button>
+          <button :aria-pressed="layout === 'strip'" @click="layout = 'strip'">
+            Ribbon
+          </button>
+          <button
+            :aria-pressed="layout === 'treemap'"
+            @click="layout = 'treemap'"
+          >
+            Treemap
+          </button>
+          <button
+            :aria-pressed="layout === 'circle'"
+            @click="layout = 'circle'"
+          >
+            Circle
+          </button>
+          <button :aria-pressed="layout === 'power'" @click="layout = 'power'">
+            Power
+          </button>
+          <button :aria-pressed="layout === 'donut'" @click="layout = 'donut'">
+            Donut
+          </button>
         </div>
         <div v-if="layout === 'treemap'" class="ratio-controls">
           <button
@@ -80,12 +99,16 @@ function setRatio(event: Event) {
           <span :style="{ background: color }"></span><code>{{ color }}</code
           ><small
             >{{ Math.round(ribbon.widths[index]! * 100) }}%
-            {{ index === ribbon.primaryIndex ? '★' : '' }}</small
+            {{ index === ribbon.primaryIndex ? "★" : "" }}</small
           >
         </button>
         <span class="legend-actions">
-          <button class="text-button" @click="emit('copyPalette')">Copy palette</button>
-          <button class="text-button" @click="emit('export', 'json')">JSON ↗</button>
+          <button class="text-button" @click="emit('copyPalette')">
+            Copy palette
+          </button>
+          <button class="text-button" @click="emit('export', 'json')">
+            JSON ↗
+          </button>
         </span>
       </div>
     </div>
@@ -110,7 +133,11 @@ function setRatio(event: Event) {
           </button>
         </div>
         <div v-if="previewMode === 'avatar'" class="avatar-context">
-          <article v-for="shape in ['power', 'square']" :key="shape" class="profile-mock">
+          <article
+            v-for="shape in ['power', 'square']"
+            :key="shape"
+            class="profile-mock"
+          >
             <div class="profile-cover"></div>
             <div class="profile-body">
               <RibbonTreemap
@@ -121,7 +148,7 @@ function setRatio(event: Event) {
                 class="profile-avatar"
                 :style="{ borderRadius: shape === 'power' ? '50%' : '4px' }"
               />
-              <h3>{{ name || 'Alex Morgan' }}</h3>
+              <h3>{{ name || "Alex Morgan" }}</h3>
               <p>Designer &amp; maker · Shanghai</p>
               <div class="profile-divider"></div>
               <div class="profile-message">
@@ -132,7 +159,7 @@ function setRatio(event: Event) {
                   :size="28"
                 />
                 <div>
-                  <strong>{{ name || 'Alex' }} <small>Just now</small></strong>
+                  <strong>{{ name || "Alex" }} <small>Just now</small></strong>
                   <p>A little color, wherever I go.</p>
                 </div>
               </div>
@@ -143,19 +170,19 @@ function setRatio(event: Event) {
           <div class="device-camera"></div>
           <div class="device-symbol">⊞</div>
           <div class="device-label">
-            <span>{{ name || 'Your identity' }}</span
+            <span>{{ name || "Your identity" }}</span
             ><RibbonStrip :ribbon="ribbon" />
           </div>
         </div>
         <div v-else-if="previewMode === 'label'" class="identity-label">
           <div class="eyebrow">PERSONAL EQUIPMENT / 001</div>
-          <h3>{{ name || 'Your identity' }}</h3>
+          <h3>{{ name || "Your identity" }}</h3>
           <p>A familiar signature, wherever it goes.</p>
           <RibbonStrip :ribbon="ribbon" style="height: 5px" />
         </div>
         <div v-else-if="previewMode === 'square-label'" class="square-label">
           <div class="eyebrow">PERSONAL EQUIPMENT</div>
-          <h3>{{ name || 'Studio laptop' }}</h3>
+          <h3>{{ name || "Studio laptop" }}</h3>
           <p>If found, please return.</p>
           <RibbonTreemap :ribbon="ribbon" :aspect-ratio="1" :size="24" />
         </div>
@@ -165,7 +192,7 @@ function setRatio(event: Event) {
             <span class="eyebrow">PERSONAL SPACE</span>
             <span class="connected">● Connected</span>
           </div>
-          <h3>{{ name || 'Welcome back, Alex' }}</h3>
+          <h3>{{ name || "Welcome back, Alex" }}</h3>
           <p>Everything you need for the day ahead.</p>
           <div class="mock-navigation">
             <span>Overview</span><span>Activity</span><span>Files</span>
@@ -185,8 +212,12 @@ function setRatio(event: Event) {
         placeholder="Name this identity"
         aria-label="Identity name"
       />
-      <button class="text-button" @click="emit('export', 'svg')">Export SVG ↗</button>
-      <button class="save-button" @click="emit('save')">Save identity <span>+</span></button>
+      <button class="text-button" @click="emit('export', 'svg')">
+        Export SVG ↗
+      </button>
+      <button class="save-button" @click="emit('save')">
+        Save identity <span>+</span>
+      </button>
     </div>
   </div>
 </template>
@@ -364,7 +395,7 @@ function setRatio(event: Event) {
   background: transparent;
   font-size: 10px;
 }
-.layout-controls button[aria-pressed='true'] {
+.layout-controls button[aria-pressed="true"] {
   background: #e9eddf;
   border-color: #a4b198;
 }
