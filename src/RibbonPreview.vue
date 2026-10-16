@@ -11,7 +11,12 @@ const layout = defineModel<"strip" | "treemap" | "circle" | "power">("layout", {
 });
 const aspectRatio = defineModel<number>("aspectRatio", { required: true });
 const name = defineModel<string>("name", { required: true });
-const emit = defineEmits<{ export: []; save: [] }>();
+const emit = defineEmits<{
+  export: [format: "svg" | "json"];
+  save: [];
+  copyColor: [color: string];
+  copyPalette: [];
+}>();
 function setRatio(event: Event) {
   const value = (event.target as HTMLInputElement).valueAsNumber;
   if (Number.isFinite(value) && value > 0) aspectRatio.value = value;
@@ -76,18 +81,29 @@ function setRatio(event: Event) {
         :size="360"
       />
       <RibbonStrip v-else :ribbon="ribbon" mark-primary />
-      <details class="color-details">
-        <summary>Colors</summary>
-        <div class="color-legend">
-          <div v-for="(color, index) in ribbon.colors" :key="index">
-            <span :style="{ background: color }"></span><code>{{ color }}</code
-            ><small
-              >{{ Math.round(ribbon.widths[index]! * 100) }}%
-              {{ index === ribbon.primaryIndex ? "★" : "" }}</small
-            >
-          </div>
-        </div>
-      </details>
+      <div class="color-legend">
+        <button
+          v-for="(color, index) in ribbon.colors"
+          :key="index"
+          class="color-chip"
+          :title="`Copy ${color}`"
+          @click="emit('copyColor', color)"
+        >
+          <span :style="{ background: color }"></span><code>{{ color }}</code
+          ><small
+            >{{ Math.round(ribbon.widths[index]! * 100) }}%
+            {{ index === ribbon.primaryIndex ? "★" : "" }}</small
+          >
+        </button>
+        <span class="legend-actions">
+          <button class="text-button" @click="emit('copyPalette')">
+            Copy palette
+          </button>
+          <button class="text-button" @click="emit('export', 'json')">
+            JSON ↗
+          </button>
+        </span>
+      </div>
     </div>
     <details class="context-preview">
       <summary>Preview</summary>
@@ -155,7 +171,7 @@ function setRatio(event: Event) {
         placeholder="Name this identity"
         aria-label="Identity name"
       />
-      <button class="secondary-button" @click="emit('export')">
+      <button class="text-button" @click="emit('export', 'svg')">
         Export SVG ↗
       </button>
       <button class="save-button" @click="emit('save')">

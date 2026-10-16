@@ -220,6 +220,22 @@ function download(format: "svg" | "json") {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+async function copyText(text: string, message: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    announce(message);
+  } catch {
+    announce("Clipboard is unavailable in this browser.");
+  }
+}
+function copyPalette() {
+  if (!current.value) return;
+  const ribbon = current.value;
+  const lines = ribbon.colors.map(
+    (color, index) => `${color} ${Math.round(ribbon.widths[index]! * 100)}%`,
+  );
+  copyText(lines.join("\n"), "Palette copied to the clipboard.");
+}
 async function copySeed() {
   if (!current.value) return;
   settings.value.seed = current.value.seed;
@@ -274,8 +290,10 @@ generate();
             v-model:aspect-ratio="aspectRatio"
             v-model:name="identityName"
             :ribbon="current"
-            @export="download('svg')"
+            @export="download"
             @save="saveIdentity"
+            @copy-color="copyText($event, `Copied ${$event}.`)"
+            @copy-palette="copyPalette"
           />
           <div class="variation-grid">
             <button
@@ -324,10 +342,6 @@ generate();
                   }}
                 </li>
               </ol>
-
-              <button class="secondary-button" @click="download('json')">
-                Export JSON ↗
-              </button>
             </div>
           </details>
         </section>

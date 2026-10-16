@@ -635,17 +635,30 @@ input[type="range"] {
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
+  align-items: center;
   margin-top: 13px;
 }
-.color-legend > div {
+.color-chip {
   display: flex;
   align-items: center;
   gap: 5px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  padding: 3px 5px;
 }
-.color-legend > div > span {
+.color-chip:hover {
+  background: #edf0e4;
+}
+.color-chip > span {
   width: 7px;
   height: 7px;
   border-radius: 2px;
+}
+.legend-actions {
+  display: flex;
+  gap: 14px;
+  margin-left: auto;
 }
 .color-legend code {
   font-size: 9px;
@@ -764,9 +777,6 @@ input[type="range"] {
 .diagnostic-body ol {
   padding-left: 20px;
 }
-.diagnostic-body .secondary-button {
-  margin-top: 10px;
-}
 footer {
   border-top: 1px solid var(--line);
   margin-top: 38px;
@@ -882,14 +892,10 @@ footer p {
   flex-direction: column;
   gap: 16px;
 }
-.color-details summary,
 .context-preview summary {
   cursor: pointer;
   color: var(--muted);
   font-size: 11px;
-}
-.color-details {
-  margin-top: 12px;
 }
 .context-preview {
   border-top: 1px solid var(--line);
