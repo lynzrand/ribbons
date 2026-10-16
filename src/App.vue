@@ -10,7 +10,7 @@ import {
 import RibbonStrip from "./RibbonStrip.vue";
 import RibbonTreemap from "./RibbonTreemap.vue";
 import { sliceAndDice } from "@ribbons/core";
-import { powerDiagram, powerSvg } from "@ribbons/core";
+import { donutSvg, powerDiagram, powerSvg } from "@ribbons/core";
 import RibbonControls from "./RibbonControls.vue";
 import RibbonPreview from "./RibbonPreview.vue";
 
@@ -25,7 +25,7 @@ const activeTab = ref<"explore" | "saved">("explore");
 const error = ref("");
 const notice = ref("");
 const selected = ref(0);
-const layout = ref<"strip" | "treemap" | "circle" | "power">("strip");
+const layout = ref<"strip" | "treemap" | "circle" | "power" | "donut">("strip");
 const aspectRatio = ref(1);
 const rerollOnChange = ref(false);
 const variations = ref<Ribbon[]>([]);
@@ -171,7 +171,9 @@ function download(format: "svg" | "json") {
   let content: string;
   if (format === "json")
     content = JSON.stringify({ name: identityName.value, ...ribbon }, null, 2);
-  else if (layout.value === "power") {
+  else if (layout.value === "donut") {
+    content = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1 1">${donutSvg(ribbon.widths, ribbon.colors, ribbon.seed)}</svg>`;
+  } else if (layout.value === "power") {
     const diagram = powerDiagram(ribbon.widths, ribbon.seed);
     content = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1 1">${powerSvg(diagram, ribbon.colors, "avatar")}</svg>`;
   } else {
@@ -309,6 +311,7 @@ generate();
                 v-if="layout !== 'strip'"
                 :circular="layout === 'circle'"
                 :voronoi="layout === 'power'"
+                :donut="layout === 'donut'"
                 :ribbon="ribbon"
                 :aspect-ratio="aspectRatio"
                 :size="96"

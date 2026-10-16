@@ -2,7 +2,7 @@
 import { computed, useId } from "vue";
 import type { Ribbon } from "@ribbons/core";
 import { sliceAndDice } from "@ribbons/core";
-import { powerDiagram, powerSvg } from "@ribbons/core";
+import { donutSvg, powerDiagram, powerSvg } from "@ribbons/core";
 
 const props = withDefaults(
   defineProps<{
@@ -11,12 +11,13 @@ const props = withDefaults(
     size?: number;
     circular?: boolean;
     voronoi?: boolean;
+    donut?: boolean;
   }>(),
   { size: 220 },
 );
 const clipId = useId();
 const ratio = computed(() =>
-  props.circular || props.voronoi ? 1 : props.aspectRatio,
+  props.circular || props.voronoi || props.donut ? 1 : props.aspectRatio,
 );
 interface GeometryInput {
   enabled?: boolean;
@@ -45,6 +46,11 @@ const diagram = computed(() => {
 const diagramSvg = computed(() =>
   diagram.value ? powerSvg(diagram.value, props.ribbon.colors, clipId) : "",
 );
+const donutMarkup = computed(() =>
+  props.donut
+    ? donutSvg(props.ribbon.widths, props.ribbon.colors, props.ribbon.seed)
+    : "",
+);
 const tiles = computed(() =>
   sliceAndDice(
     props.ribbon.widths,
@@ -63,11 +69,15 @@ const tiles = computed(() =>
     role="img"
     :aria-label="`Color treemap: ${ribbon.colors.join(', ')}`"
   >
-    <g v-if="voronoi" v-html="diagramSvg"></g>
+    <g v-if="donut" v-html="donutMarkup"></g>
+    <g v-else-if="voronoi" v-html="diagramSvg"></g>
     <defs v-else-if="circular">
       <clipPath :id="clipId"><circle cx="0.5" cy="0.5" r="0.5" /></clipPath>
     </defs>
-    <g v-if="!voronoi" :clip-path="circular ? `url(#${clipId})` : undefined">
+    <g
+      v-if="!voronoi && !donut"
+      :clip-path="circular ? `url(#${clipId})` : undefined"
+    >
       <rect
         v-for="(tile, index) in tiles"
         :key="index"

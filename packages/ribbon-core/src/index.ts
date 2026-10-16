@@ -27,3 +27,4 @@ export {
   type PowerDiagram,
 } from "./power-diagram.ts";
 export { softPreset } from "./presets.ts";
+export { donutSvg } from "./donut.ts";
