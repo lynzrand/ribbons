@@ -745,26 +745,6 @@ input[type="range"] {
   background: #758a62;
   border-radius: 50%;
 }
-.selection-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 0;
-}
-.selection-actions strong {
-  font-size: 11px;
-  font-weight: 550;
-}
-.selection-actions p {
-  font-size: 9px;
-  color: #999f8d;
-  margin-top: 5px;
-}
-.selection-actions > div:last-child {
-  display: flex;
-  gap: 9px;
-}
 .secondary-button,
 .save-button {
   font-size: 10px;
@@ -939,10 +919,6 @@ footer p {
   flex-direction: column;
   gap: 16px;
 }
-.selection-actions {
-  padding: 0;
-  justify-content: flex-end;
-}
 .color-details summary,
 .context-preview summary {
   cursor: pointer;
@@ -1011,13 +987,6 @@ footer p {
   }
   .variation-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .selection-actions {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .selection-actions > div:last-child {
-    align-self: flex-end;
   }
   .heading-note {
     display: none;
@@ -1129,15 +1098,6 @@ footer p {
   }
   .color-legend code {
     font-size: 10px;
-  }
-  .selection-actions {
-    gap: 18px;
-  }
-  .selection-actions strong {
-    font-size: 13px;
-  }
-  .selection-actions p {
-    font-size: 11px;
   }
   .secondary-button,
   .save-button {

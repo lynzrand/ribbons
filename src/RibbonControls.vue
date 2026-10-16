@@ -4,7 +4,6 @@ import type { RibbonOptions } from "@ribbons/core";
 import OklabPicker from "./OklabPicker.vue";
 
 const settings = defineModel<RibbonOptions>({ required: true });
-const name = defineModel<string>("name", { required: true });
 const rerollOnChange = defineModel<boolean>("rerollOnChange", {
   required: true,
 });
@@ -60,15 +59,17 @@ const shellChance = computed({
         step="1"
       />
     </div>
-    <button class="generate-button" @click="emit('generate')">
-      Generate <span>↻</span>
-    </button>
-    <button class="secondary-button" @click="emit('randomize')">
-      Parameters from seed
-    </button>
-    <button class="secondary-button" @click="emit('randomIdentity')">
-      Random identity
-    </button>
+    <div class="action-stack">
+      <button class="generate-button" @click="emit('generate')">
+        Generate <span>↻</span>
+      </button>
+      <button class="secondary-button" @click="emit('randomize')">
+        Parameters from seed
+      </button>
+      <button class="secondary-button" @click="emit('randomIdentity')">
+        Random identity
+      </button>
+    </div>
     <label
       class="reroll-option"
       :title="
@@ -86,13 +87,6 @@ const shellChance = computed({
     </label>
     <details class="advanced">
       <summary>Options <span>+</span></summary>
-      <label class="field-heading" for="identity-name">Name</label>
-      <input
-        id="identity-name"
-        v-model="name"
-        maxlength="80"
-        placeholder="Identity name"
-      />
       <label class="field-heading" for="primary-affinity"
         >Primary affinity
         <output
@@ -189,6 +183,11 @@ const shellChance = computed({
 </template>
 
 <style scoped>
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .reroll-option {
   display: flex;
   align-items: center;

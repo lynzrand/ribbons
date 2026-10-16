@@ -262,7 +262,6 @@ generate();
       <div v-if="activeTab === 'explore'" class="workspace">
         <RibbonControls
           v-model="settings"
-          v-model:name="identityName"
           v-model:reroll-on-change="rerollOnChange"
           @generate="shuffle"
           @randomize="randomizeOptions()"
@@ -273,8 +272,10 @@ generate();
           <RibbonPreview
             v-model:layout="layout"
             v-model:aspect-ratio="aspectRatio"
+            v-model:name="identityName"
             :ribbon="current"
-            :identity-name="identityName"
+            @export="download('svg')"
+            @save="saveIdentity"
           />
           <div class="variation-grid">
             <button
@@ -302,15 +303,6 @@ generate();
               />
               <RibbonStrip v-else :ribbon="ribbon" />
             </button>
-          </div>
-          <div class="selection-actions">
-            <div>
-              <button class="secondary-button" @click="download('svg')">
-                Export SVG ↗</button
-              ><button class="save-button" @click="saveIdentity">
-                Save identity <span>+</span>
-              </button>
-            </div>
           </div>
           <details class="diagnostics">
             <summary>Details</summary>

@@ -4,12 +4,14 @@ import type { Ribbon } from "@ribbons/core";
 import RibbonStrip from "./RibbonStrip.vue";
 import RibbonTreemap from "./RibbonTreemap.vue";
 
-defineProps<{ ribbon: Ribbon; identityName: string }>();
+defineProps<{ ribbon: Ribbon }>();
 const previewMode = ref("avatar");
 const layout = defineModel<"strip" | "treemap" | "circle" | "power">("layout", {
   required: true,
 });
 const aspectRatio = defineModel<number>("aspectRatio", { required: true });
+const name = defineModel<string>("name", { required: true });
+const emit = defineEmits<{ export: []; save: [] }>();
 function setRatio(event: Event) {
   const value = (event.target as HTMLInputElement).valueAsNumber;
   if (Number.isFinite(value) && value > 0) aspectRatio.value = value;
@@ -71,6 +73,7 @@ function setRatio(event: Event) {
         :voronoi="layout === 'power'"
         :ribbon="ribbon"
         :aspect-ratio="aspectRatio"
+        :size="360"
       />
       <RibbonStrip v-else :ribbon="ribbon" mark-primary />
       <details class="color-details">
@@ -94,6 +97,7 @@ function setRatio(event: Event) {
             v-for="mode in ['avatar', 'device', 'label', 'interface']"
             :key="mode"
             :class="{ active: previewMode === mode }"
+            :aria-pressed="previewMode === mode"
             @click="previewMode = mode"
           >
             {{ mode }}
@@ -120,13 +124,13 @@ function setRatio(event: Event) {
           <div class="device-camera"></div>
           <div class="device-symbol">⊞</div>
           <div class="device-label">
-            <span>{{ identityName || "Your identity" }}</span
+            <span>{{ name || "Your identity" }}</span
             ><RibbonStrip :ribbon="ribbon" />
           </div>
         </div>
         <div v-else-if="previewMode === 'label'" class="identity-label">
           <div class="eyebrow">PERSONAL EQUIPMENT / 001</div>
-          <h3>{{ identityName || "Your identity" }}</h3>
+          <h3>{{ name || "Your identity" }}</h3>
           <p>A familiar signature, wherever it goes.</p>
           <RibbonStrip :ribbon="ribbon" />
           <div class="label-bottom">
@@ -138,12 +142,26 @@ function setRatio(event: Event) {
             <span class="device-avatar">▱</span
             ><span class="connected">● Connected</span>
           </div>
-          <h3>{{ identityName || "Your identity" }}</h3>
+          <h3>{{ name || "Your identity" }}</h3>
           <p>Last seen just now</p>
           <RibbonStrip :ribbon="ribbon" />
         </div>
       </div>
     </details>
+    <div class="panel-actions">
+      <input
+        v-model="name"
+        maxlength="80"
+        placeholder="Name this identity"
+        aria-label="Identity name"
+      />
+      <button class="secondary-button" @click="emit('export')">
+        Export SVG ↗
+      </button>
+      <button class="save-button" @click="emit('save')">
+        Save identity <span>+</span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -189,12 +207,44 @@ function setRatio(event: Event) {
   color: var(--muted);
 }
 .ratio-controls input {
-  width: 60px;
+  width: 54px;
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 4px;
   background: transparent;
   color: var(--ink);
   font-size: 11px;
+  text-align: center;
+  appearance: textfield;
+}
+.ratio-controls input::-webkit-outer-spin-button,
+.ratio-controls input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
+  padding: 14px 18px;
+}
+.panel-actions input {
+  flex: 1 1 140px;
+  min-width: 0;
+  border: 1px solid #e0e4d9;
+  border-radius: 5px;
+  padding: 10px 11px;
+  background: #fcfcf7;
+  color: var(--ink);
+  font-size: 11px;
+  outline: none;
+}
+.panel-actions input:focus {
+  border-color: #8aa486;
+  box-shadow: 0 0 0 2px #8aa48620;
+}
+.panel-actions input::placeholder {
+  color: #a0a498;
 }
 </style>
