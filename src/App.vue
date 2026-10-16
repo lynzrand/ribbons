@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref, watch } from "vue";
 import {
   softPreset,
   generateRibbon,
+  randomRibbonOptions,
   type Ribbon,
   type RibbonOptions,
 } from "@ribbons/core";
@@ -91,6 +92,12 @@ function readSaved(): SavedIdentity[] {
 }
 function shuffle() {
   explorationSeed = crypto.randomUUID();
+  selected.value = 0;
+  generate();
+}
+
+function randomizeOptions(seed = settings.value.seed) {
+  settings.value = randomRibbonOptions(seed);
   selected.value = 0;
   generate();
 }
@@ -258,6 +265,8 @@ generate();
           v-model:name="identityName"
           v-model:reroll-on-change="rerollOnChange"
           @generate="shuffle"
+          @randomize="randomizeOptions()"
+          @random-identity="randomizeOptions('')"
         />
 
         <section v-if="current" class="results">

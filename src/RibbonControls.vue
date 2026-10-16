@@ -8,7 +8,11 @@ const name = defineModel<string>("name", { required: true });
 const rerollOnChange = defineModel<boolean>("rerollOnChange", {
   required: true,
 });
-const emit = defineEmits<{ generate: [] }>();
+const emit = defineEmits<{
+  generate: [];
+  randomize: [];
+  randomIdentity: [];
+}>();
 const shellMode = computed({
   get: () => (settings.value.shellChance === null ? "auto" : "manual"),
   set: (mode) => {
@@ -58,6 +62,12 @@ const shellChance = computed({
     </div>
     <button class="generate-button" @click="emit('generate')">
       Generate <span>↻</span>
+    </button>
+    <button class="secondary-button" @click="emit('randomize')">
+      Parameters from seed
+    </button>
+    <button class="secondary-button" @click="emit('randomIdentity')">
+      Random identity
     </button>
     <label
       class="reroll-option"
@@ -170,6 +180,10 @@ const shellChance = computed({
         </button></label
       >
       <input id="seed" v-model="settings.seed" placeholder="Random" />
+      <p>
+        Parameters from seed sets the color and style with four segments. Clear
+        the seed for a new random identity.
+      </p>
     </details>
   </aside>
 </template>
