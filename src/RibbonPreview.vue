@@ -232,17 +232,20 @@ function setRatio(event: Event) {
 .panel-actions input {
   flex: 1 1 140px;
   min-width: 0;
-  border: 1px solid #e0e4d9;
+  border: 1px solid transparent;
   border-radius: 5px;
   padding: 10px 11px;
-  background: #fcfcf7;
+  background: transparent;
   color: var(--ink);
   font-size: 11px;
   outline: none;
 }
+.panel-actions input:hover {
+  border-color: #e0e4d9;
+}
 .panel-actions input:focus {
   border-color: #8aa486;
-  box-shadow: 0 0 0 2px #8aa48620;
+  background: #fcfcf7;
 }
 .panel-actions input::placeholder {
   color: #a0a498;

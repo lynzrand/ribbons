@@ -25,7 +25,7 @@ const activeTab = ref<"explore" | "saved">("explore");
 const error = ref("");
 const notice = ref("");
 const selected = ref(0);
-const layout = ref<"strip" | "treemap" | "circle" | "power">("treemap");
+const layout = ref<"strip" | "treemap" | "circle" | "power">("strip");
 const aspectRatio = ref(1);
 const rerollOnChange = ref(false);
 const variations = ref<Ribbon[]>([]);
@@ -284,22 +284,16 @@ generate();
               class="variation"
               :class="{ selected: selected === index }"
               :aria-pressed="selected === index"
+              :aria-label="`Variation ${index + 1}`"
               @click="selected = index"
             >
-              <div>
-                <span
-                  >VARIATION {{ (index + 1).toString().padStart(2, "0") }}</span
-                ><span class="selection-check">{{
-                  selected === index ? "✓" : "↗"
-                }}</span>
-              </div>
               <RibbonTreemap
                 v-if="layout !== 'strip'"
                 :circular="layout === 'circle'"
                 :voronoi="layout === 'power'"
                 :ribbon="ribbon"
                 :aspect-ratio="aspectRatio"
-                :size="64"
+                :size="96"
               />
               <RibbonStrip v-else :ribbon="ribbon" />
             </button>

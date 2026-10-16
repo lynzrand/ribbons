@@ -121,7 +121,6 @@ watch(() => lab.value.l, drawPlane);
         class="picker-marker"
         :style="{ ...marker, background: preview }"
       ></span>
-      <span class="plane-axis">−a / +a</span>
     </div>
     <label class="lightness-control"
       ><span>L</span
@@ -134,20 +133,6 @@ watch(() => lab.value.l, drawPlane);
         aria-label="OKLab lightness"
         @input="setAxis('l', $event)"
     /></label>
-    <div class="lab-fields">
-      <label v-for="axis in ['l', 'a', 'b'] as const" :key="axis"
-        >{{ axis === "l" ? "L" : axis }}
-        <input
-          type="number"
-          :value="Number(lab[axis].toFixed(3))"
-          :min="axis === 'l' ? 0 : -extent"
-          :max="axis === 'l' ? 1 : extent"
-          step="0.005"
-          :aria-label="`OKLab ${axis}`"
-          @change="setAxis(axis, $event)"
-        />
-      </label>
-    </div>
     <span v-if="!inGamut(lab, 2e-7)" class="gamut-note"
       >Preview mapped to sRGB</span
     >
@@ -192,14 +177,6 @@ canvas {
   border-radius: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 1px #0008;
-  pointer-events: none;
-}
-.plane-axis {
-  position: absolute;
-  bottom: 5px;
-  right: 7px;
-  font: 9px monospace;
-  color: #555;
   pointer-events: none;
 }
 .lightness-control {

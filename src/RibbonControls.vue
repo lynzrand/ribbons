@@ -63,10 +63,10 @@ const shellChance = computed({
       <button class="generate-button" @click="emit('generate')">
         Generate <span>↻</span>
       </button>
-      <button class="secondary-button" @click="emit('randomize')">
+      <button class="text-button" @click="emit('randomize')">
         Parameters from seed
       </button>
-      <button class="secondary-button" @click="emit('randomIdentity')">
+      <button class="text-button" @click="emit('randomIdentity')">
         Random identity
       </button>
     </div>
@@ -186,7 +186,11 @@ const shellChance = computed({
 .action-stack {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 10px;
+}
+.action-stack .generate-button {
+  align-self: stretch;
 }
 .reroll-option {
   display: flex;
