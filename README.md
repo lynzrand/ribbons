@@ -52,6 +52,16 @@ const tiles = sliceAndDice(ribbon.widths, 128, 128);
 
 A seed reproduces a result with the same parameters and algorithm version. The sampler is experimental; results may change between versions. Colors are produced for sRGB, and palettes are not an accessibility or contrast guarantee.
 
+For an identity derived entirely from a seed, use
+`generateRibbon(randomRibbonOptions("account-42"))`, importing both functions from
+`@ribbons/core`. This fixes four segments and a width shape of 0.6, and derives the
+primary color, contrast, and affinities from the seed. A blank seed creates a UUID;
+retain the returned options' seed to reproduce it. The playground's **Parameters
+from seed** button applies these options to the controls; clear the seed before
+clicking it to create a new random identity. The variation thumbnails explore
+other palettes with the applied parameters. **Random identity** always chooses a
+fresh seed and derives new parameters, even when a fixed seed is entered.
+
 ## Development
 
 ```sh
