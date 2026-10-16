@@ -16,6 +16,7 @@ export {
   type SamplingStep,
 } from "./sampler.ts";
 export { seededRandom } from "./random.ts";
+export { randomRibbonOptions } from "./random-options.ts";
 export { sliceAndDice, type Tile } from "./treemap.ts";
 export { circleArea } from "./circle-area.ts";
 export {
