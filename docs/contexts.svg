@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="790" height="600" viewBox="0 0 790 600" role="img" aria-labelledby="title"><title id="title">One palette illustrated in square and Power profiles, a workspace, a device sticker, and ribbon and square labels</title><rect x="0" y="0" width="790" height="600" rx="16" fill="#f6f5f0"/><text x="28" y="34" font-family="sans-serif" font-size="18" fill="#293b34">One palette, in context</text>
+<text x="28" y="70" font-family="sans-serif" font-size="12" fill="#617268">Power profile</text>
+<rect x="28" y="88" width="228" height="248" rx="10" fill="#fdfdf8"/>
+<rect x="28" y="88" width="228" height="54" rx="10" fill="#dfe7dc"/>
+<g transform="translate(46 118) scale(64)"><defs><clipPath id="profile-0-disk"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath></defs><g clip-path="url(#profile-0-disk)"><polygon points="1,0.7394816478147754 1,1 0.11573558460137567,1 0.2087697960561563,0.5467419573804839 0.4913415306438482,0.4121208944271779" fill="#558c82"/><polygon points="0,0 0.5591257088911279,0 0.49134153064384833,0.4121208944271779 0.20876979605615625,0.5467419573804841 0,0.4411873967674551" fill="#7cd5e9"/><polygon points="0.5591257088911279,0 1,0 1,0.7394816478147755 0.4913415306438482,0.4121208944271781" fill="#95e6e9"/><polygon points="0.20876979605615636,0.5467419573804843 0.11573558460137578,1 0,1 0,0.4411873967674551" fill="#1a2c28"/></g></g>
+<text x="46" y="209" font-family="sans-serif" font-size="16" fill="#293b34">Alex Morgan</text>
+<text x="46" y="230" font-family="sans-serif" font-size="11" fill="#617268">Designer &amp; maker</text>
+<rect x="46" y="249" width="192" height="1" rx="0" fill="#e4e6dd"/>
+<g transform="translate(46 267) scale(28)"><defs><clipPath id="message-0-disk"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath></defs><g clip-path="url(#message-0-disk)"><polygon points="1,0.7394816478147754 1,1 0.11573558460137567,1 0.2087697960561563,0.5467419573804839 0.4913415306438482,0.4121208944271779" fill="#558c82"/><polygon points="0,0 0.5591257088911279,0 0.49134153064384833,0.4121208944271779 0.20876979605615625,0.5467419573804841 0,0.4411873967674551" fill="#7cd5e9"/><polygon points="0.5591257088911279,0 1,0 1,0.7394816478147755 0.4913415306438482,0.4121208944271781" fill="#95e6e9"/><polygon points="0.20876979605615636,0.5467419573804843 0.11573558460137578,1 0,1 0,0.4411873967674551" fill="#1a2c28"/></g></g>
+<text x="84" y="277" font-family="sans-serif" font-size="10" fill="#293b34">Alex · Just now</text>
+<text x="84" y="295" font-family="sans-serif" font-size="9" fill="#617268">A little color, wherever I go.</text>
+<text x="276" y="70" font-family="sans-serif" font-size="12" fill="#617268">Square profile</text>
+<rect x="276" y="88" width="228" height="248" rx="10" fill="#fdfdf8"/>
+<rect x="276" y="88" width="228" height="54" rx="10" fill="#dfe7dc"/>
+<g transform="translate(294 118) scale(64)"><rect x="0" y="0" width="0.4028599965470184" height="1" rx="0" fill="#558c82"/><rect x="0.4028599965470184" y="0" width="0.5971400034529817" height="0.42417792837625184" rx="0" fill="#7cd5e9"/><rect x="0.4028599965470184" y="0.42417792837625184" width="0.4886545149896872" height="0.5758220716237481" rx="0" fill="#95e6e9"/><rect x="0.8915145115367056" y="0.42417792837625184" width="0.10848548846329448" height="0.5758220716237481" rx="0" fill="#1a2c28"/></g>
+<text x="294" y="209" font-family="sans-serif" font-size="16" fill="#293b34">Alex Morgan</text>
+<text x="294" y="230" font-family="sans-serif" font-size="11" fill="#617268">Designer &amp; maker</text>
+<rect x="294" y="249" width="192" height="1" rx="0" fill="#e4e6dd"/>
+<g transform="translate(294 267) scale(28)"><rect x="0" y="0" width="0.4028599965470184" height="1" rx="0" fill="#558c82"/><rect x="0.4028599965470184" y="0" width="0.5971400034529817" height="0.42417792837625184" rx="0" fill="#7cd5e9"/><rect x="0.4028599965470184" y="0.42417792837625184" width="0.4886545149896872" height="0.5758220716237481" rx="0" fill="#95e6e9"/><rect x="0.8915145115367056" y="0.42417792837625184" width="0.10848548846329448" height="0.5758220716237481" rx="0" fill="#1a2c28"/></g>
+<text x="332" y="277" font-family="sans-serif" font-size="10" fill="#293b34">Alex · Just now</text>
+<text x="332" y="295" font-family="sans-serif" font-size="9" fill="#617268">A little color, wherever I go.</text>
+<text x="524" y="70" font-family="sans-serif" font-size="12" fill="#617268">Workspace</text>
+<rect x="524" y="88" width="238" height="248" rx="10" fill="#fdfdf8"/>
+<defs><clipPath id="workspace-card"><rect x="524" y="88" width="238" height="248" rx="10" fill="#fff"/></clipPath></defs>
+<g clip-path="url(#workspace-card)"><g transform="translate(524 88) scale(238)"><rect x="0" y="0" width="0.4028599965470184" height="0.029411764705882353" rx="0" fill="#558c82"/><rect x="0.4028599965470184" y="0" width="0.25329360961527364" height="0.029411764705882353" rx="0" fill="#7cd5e9"/><rect x="0.656153606162292" y="0" width="0.2813780551296596" height="0.029411764705882353" rx="0" fill="#95e6e9"/><rect x="0.9375316612919515" y="0" width="0.062468338708048445" height="0.029411764705882353" rx="0" fill="#1a2c28"/></g></g>
+<text x="544" y="116" font-family="sans-serif" font-size="9" fill="#617268">PERSONAL SPACE</text>
+<text x="544" y="152" font-family="sans-serif" font-size="16" fill="#293b34">Welcome back, Alex</text>
+<text x="544" y="176" font-family="sans-serif" font-size="10" fill="#617268">Everything for the day ahead.</text>
+<text x="544" y="220" font-family="sans-serif" font-size="11" fill="#617268">Overview     Activity     Files</text>
+<rect x="544" y="236" width="198" height="1" rx="0" fill="#e4e6dd"/>
+<text x="544" y="267" font-family="sans-serif" font-size="12" fill="#293b34">Today’s workspace</text>
+<text x="544" y="289" font-family="sans-serif" font-size="10" fill="#617268">All changes saved</text>
+<text x="28" y="378" font-family="sans-serif" font-size="12" fill="#617268">Device</text>
+<rect x="28" y="398" width="288" height="174" rx="12" fill="#cbd1c8"/>
+<rect x="182" y="496" width="112" height="48" rx="3" fill="#fdfdf8"/>
+<text x="192" y="513" font-family="sans-serif" font-size="9" fill="#293b34">Studio laptop</text>
+<g transform="translate(192 524) scale(92)"><rect x="0" y="0" width="0.4028599965470184" height="0.08695652173913043" rx="0" fill="#558c82"/><rect x="0.4028599965470184" y="0" width="0.25329360961527364" height="0.08695652173913043" rx="0" fill="#7cd5e9"/><rect x="0.656153606162292" y="0" width="0.2813780551296596" height="0.08695652173913043" rx="0" fill="#95e6e9"/><rect x="0.9375316612919515" y="0" width="0.062468338708048445" height="0.08695652173913043" rx="0" fill="#1a2c28"/></g>
+<text x="344" y="378" font-family="sans-serif" font-size="12" fill="#617268">Ribbon label</text>
+<rect x="344" y="398" width="236" height="174" rx="4" fill="#fdfdf8"/>
+<text x="362" y="426" font-family="sans-serif" font-size="8" fill="#617268">PERSONAL EQUIPMENT / 001</text>
+<text x="362" y="460" font-family="sans-serif" font-size="19" fill="#293b34">Studio laptop</text>
+<text x="362" y="485" font-family="sans-serif" font-size="9" fill="#617268">A familiar signature, wherever it goes.</text>
+<g transform="translate(362 552) scale(200)"><rect x="0" y="0" width="0.4028599965470184" height="0.025" rx="0" fill="#558c82"/><rect x="0.4028599965470184" y="0" width="0.25329360961527364" height="0.025" rx="0" fill="#7cd5e9"/><rect x="0.656153606162292" y="0" width="0.2813780551296596" height="0.025" rx="0" fill="#95e6e9"/><rect x="0.9375316612919515" y="0" width="0.062468338708048445" height="0.025" rx="0" fill="#1a2c28"/></g>
+<text x="608" y="378" font-family="sans-serif" font-size="12" fill="#617268">Square label</text>
+<rect x="608" y="398" width="154" height="174" rx="4" fill="#fdfdf8"/>
+<text x="624" y="425" font-family="sans-serif" font-size="8" fill="#617268">PERSONAL EQUIPMENT</text>
+<text x="624" y="456" font-family="sans-serif" font-size="16" fill="#293b34">Studio laptop</text>
+<text x="624" y="478" font-family="sans-serif" font-size="9" fill="#617268">If found, please return.</text>
+<g transform="translate(624 532) scale(24)"><rect x="0" y="0" width="0.4028599965470184" height="1" rx="0" fill="#558c82"/><rect x="0.4028599965470184" y="0" width="0.5971400034529817" height="0.42417792837625184" rx="0" fill="#7cd5e9"/><rect x="0.4028599965470184" y="0.42417792837625184" width="0.4886545149896872" height="0.5758220716237481" rx="0" fill="#95e6e9"/><rect x="0.8915145115367056" y="0.42417792837625184" width="0.10848548846329448" height="0.5758220716237481" rx="0" fill="#1a2c28"/></g></svg>

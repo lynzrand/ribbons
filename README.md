@@ -1,20 +1,31 @@
 # Ribbons
 
-Color as identity: choose a main color and generate a small, weighted palette for a device, a profile, or anything else that needs a recognizable mark.
+Color as identity: choose a main color and generate a small, weighted palette for a profile, a device, or anything else that needs a recognizable mark.
 
 [Open the playground](https://lynzrand.github.io/ribbons/)
 
 ![Thirty generated color ribbons](docs/preview.svg)
 
-Pick a color directly in OKLab, then adjust contrast, hue affinity, and chroma affinity. Soft colors can stay pastel; dull colors can stay subdued. Parameters update the previews automatically, with an option to reroll the random seed on every change.
+## Use the playground
 
-The same colors and weights work as a thin ribbon, a rectangular treemap, or a circular avatar using area-aware splits or a weighted power diagram. Save identities in your browser, reuse their seeds, and export SVG or palette JSON. No server or account is needed.
+1. Pick a main color in the OKLab picker, or click **Random identity** for a new color and style.
+2. Adjust contrast and segment count. Open **Options** to tune primary and chroma affinity. Previews update as you edit; choose a variation to explore another palette.
+3. Switch layouts and open **In context** to see profiles, a workspace, device markings, and labels.
+4. Copy individual colors or the whole palette, export SVG or palette JSON, or name and save the identity in your browser.
 
-![The same palettes as treemaps, circular splits, and power diagrams](docs/avatars.svg)
+For repeatable results, enter a seed and keep the same parameters. **Parameters from seed** derives the main color and style from that seed with four segments; clear the seed to get a new identity. **Random identity** always starts fresh. Automatic rerolling on parameter changes is available when no fixed seed is entered.
+
+![Three palettes, each shown as a ribbon, square, circular split, Power avatar, and donut](docs/avatars.svg)
+
+Each row uses the same colors and weights across five styles: a thin ribbon, a square treemap, a circular split, a Power avatar, and a rounded donut.
+
+The examples below use one unchanged palette throughout. Power and square avatars appear at profile and conversation sizes; ribbons mark a workspace, a device, and a label.
+
+![One palette in square and Power profiles, a workspace, a device sticker, and ribbon and square labels](docs/contexts.svg)
 
 ## Run locally
 
-Use Node.js 26 and pnpm 12.11.2 (the version pinned in `package.json`).
+Use Node.js 26 and pnpm 12.11.2, matching the project's CI and package manager configuration.
 
 ```sh
 pnpm install
@@ -30,48 +41,44 @@ pnpm preview
 
 ## Core library
 
-The Vue playground lives in `src/`. The dependency-free TypeScript sampler, color conversions, and layouts live in [`packages/ribbon-core`](packages/ribbon-core/src/index.ts), exposed within this workspace as `@ribbons/core`.
+The playground uses a dependency-free TypeScript library, exposed within this workspace as `@ribbons/core`. It generates palettes and provides the same layouts used in the previews.
 
 ```ts
 import {
   fromHex,
   generateRibbon,
+  randomRibbonOptions,
   sliceAndDice,
   softPreset,
-} from "@ribbons/core";
+} from '@ribbons/core'
 
 const ribbon = generateRibbon({
   ...softPreset,
-  lab: fromHex("#b9dfc9"),
-  seed: "studio-laptop",
-});
+  lab: fromHex('#b9dfc9'),
+  seed: 'studio-laptop',
+})
 
 // Colors and widths share the same order; widths sum to one.
-const tiles = sliceAndDice(ribbon.widths, 128, 128);
+const tiles = sliceAndDice(ribbon.widths, 128, 128)
+
+// Derive both the main color and style from a seed.
+const identity = generateRibbon(randomRibbonOptions('account-42'))
 ```
 
-A seed reproduces a result with the same parameters and algorithm version. The sampler is experimental; results may change between versions. Colors are produced for sRGB, and palettes are not an accessibility or contrast guarantee.
+See the [core exports](packages/ribbon-core/src/index.ts) for color conversions, palette types, and layout functions. `powerSvg` and `donutSvg` return SVG fragments for circular avatars and rounded rings. Blank seeds get a UUID; retain the returned seed and options to reproduce a palette.
 
-For an identity derived entirely from a seed, use
-`generateRibbon(randomRibbonOptions("account-42"))`, importing both functions from
-`@ribbons/core`. This fixes four segments and a width shape of 0.6, and derives the
-primary color, contrast, and affinities from the seed. A blank seed creates a UUID;
-retain the returned options' seed to reproduce it. The playground's **Parameters
-from seed** button applies these options to the controls; clear the seed before
-clicking it to create a new random identity. The variation thumbnails explore
-other palettes with the applied parameters. **Random identity** always chooses a
-fresh seed and derives new parameters, even when a fixed seed is entered.
+## Limits
 
-## Development
+Reproducing a palette requires the same seed, parameters, and algorithm version. The sampler is experimental, and results may change between versions. Colors are produced for sRGB; generated palettes do not guarantee accessible text or UI contrast. Saved identities stay in the current browser; export JSON to keep a separate copy.
 
-```sh
-pnpm test
-pnpm format:check
-pnpm ablate
-```
+## Contributing
 
-The ablation runner compares individual sampling contributions with matched seeds. Generated ablation results go to the system temporary directory, outside the repository. GitHub Pages builds and deploys the playground on pushes to `main`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for checks, visual preview generation, and deployment details.
 
 ## LLM disclosure
 
 An LLM did most of the programming and research for this project, including algorithm exploration, implementation, tests, and literature searches. The human author supplied the original idea, visual references, design direction, and iterative feedback. Treat research conclusions as experimental observations rather than a validated color-harmony model.
+
+## License
+
+ISC, as declared in [package.json](package.json).

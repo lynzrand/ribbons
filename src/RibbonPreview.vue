@@ -160,13 +160,13 @@ function setRatio(event: Event) {
           <RibbonTreemap :ribbon="ribbon" :aspect-ratio="1" :size="24" />
         </div>
         <div v-else class="interface-card">
+          <RibbonStrip :ribbon="ribbon" />
           <div class="interface-top">
             <span class="eyebrow">PERSONAL SPACE</span>
             <span class="connected">● Connected</span>
           </div>
           <h3>{{ name || 'Welcome back, Alex' }}</h3>
           <p>Everything you need for the day ahead.</p>
-          <RibbonStrip :ribbon="ribbon" />
           <div class="mock-navigation">
             <span>Overview</span><span>Activity</span><span>Files</span>
           </div>
@@ -280,6 +280,14 @@ function setRatio(event: Event) {
 }
 .square-label p {
   margin-bottom: 20px;
+}
+.interface-card {
+  overflow: hidden;
+}
+.interface-card > .ribbon-strip {
+  width: calc(100% + 44px);
+  margin: -22px -22px 22px;
+  border-radius: 0;
 }
 .mock-navigation {
   display: flex;
